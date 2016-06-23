@@ -1,0 +1,9 @@
+uri: "https://ftp.gnu.org/gnu/binutils/binutils-2.26.tar.bz2"
+hash: "c2ace41809542f5237afc7e3b8f32bb92bc7bc53c6232a84463c423b0714ecd9"
+file: "binutils-2.26.tar.bz2"
+name: "binutils"
+version: "2.26"
+build:
+  :initial: "$EIR/build/binutils-2.26/configure --prefix=/ --with-sysroot=$EIR/output/ --with-lib-path=/lib --disable-nls --disable-werror && make" 
+  :toolchain: ""
+  :image: ""

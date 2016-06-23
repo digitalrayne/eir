@@ -1,0 +1,5 @@
+file: "xz-5.2.2.tar.gz"
+uri: "http://tukaani.org/xz/xz-5.2.2.tar.gz"
+hash: "73df4d5d34f0468bd57d09f2d8af363e95ed6cc3a4a86129d2f2c366259902a2"
+name: "xz"
+version: "5.2.2"

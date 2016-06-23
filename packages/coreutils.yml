@@ -1,0 +1,5 @@
+file: "coreutils-8.25.tar.xz"
+uri: "https://ftp.gnu.org/gnu/coreutils/coreutils-8.25.tar.xz"
+hash: "31e67c057a5b32a582f26408c789e11c2e8d676593324849dcf5779296cdce87"
+name: "coreutils"
+version: "8.25"

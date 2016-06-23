@@ -1,0 +1,5 @@
+file: "make-4.2.1.tar.bz2"
+uri: "https://ftp.gnu.org/gnu/make/make-4.2.1.tar.bz2"
+hash: "d6e262bf3601b42d2b1e4ef8310029e1dcf20083c5446b4b7aa67081fdffc589"
+name: "make"
+version: "4.2.1"

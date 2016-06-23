@@ -1,0 +1,5 @@
+uri: "https://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-2.25.tar.xz"
+file: "libcap-2.25.tar.xz"
+hash: "693c8ac51e983ee678205571ef272439d83afe62dd8e424ea14ad9790bc35162"
+name: "libcap"
+version: "2.25"

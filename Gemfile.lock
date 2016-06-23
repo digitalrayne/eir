@@ -1,0 +1,28 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    bzip2-ffi (1.0.0)
+      ffi (~> 1.0)
+    colorize (0.7.7)
+    ffi (1.9.10)
+    io-like (0.3.0)
+    minitar (0.5.4)
+    progressbar (0.21.0)
+    rake (11.2.2)
+    ruby-xz (0.2.3)
+      ffi (~> 1.9)
+      io-like (~> 0.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bzip2-ffi
+  colorize
+  minitar
+  progressbar
+  rake
+  ruby-xz (= 0.2.3)
+
+BUNDLED WITH
+   1.12.5

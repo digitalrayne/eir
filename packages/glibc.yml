@@ -1,0 +1,5 @@
+file: "glibc-2.23.tar.xz"
+uri: "https://ftp.gnu.org/gnu/glibc/glibc-2.23.tar.xz"
+hash: "94efeb00e4603c8546209cefb3e1a50a5315c86fa9b078b6fad758e187ce13e9"
+name: "glibc"
+version: "2.23"

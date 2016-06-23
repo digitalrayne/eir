@@ -1,0 +1,6 @@
+uri: "https://www.freedesktop.org/software/systemd/systemd-221.tar.xz"
+hash: "085e088650afbfc688ccb13459aedb1fbc7c8810358605b076301f472d51cc4f"
+file: "systemd-221.tar.xz"
+name: "systemd"
+version: "221"
+depends: [ 'systemd', 'libcap', 'libseccomp', 'glibc' ]

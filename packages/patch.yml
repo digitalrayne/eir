@@ -1,0 +1,5 @@
+file: "patch-2.7.5.tar.xz"
+uri: "https://ftp.gnu.org/gnu/patch/patch-2.7.5.tar.xz"
+hash: "fd95153655d6b95567e623843a0e77b81612d502ecf78a489a4aed7867caa299"
+name: "patch"
+version: "2.7.5"

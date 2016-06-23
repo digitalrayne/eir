@@ -1,0 +1,8 @@
+file: "bash-4.3.30.tar.gz"
+hash: "317881019bbf2262fb814b7dd8e40632d13c3608d2f237800a8828fbb8a640dd"
+uri: "https://ftp.gnu.org/gnu/bash/bash-4.3.30.tar.gz"
+name: "bash"
+version: "4.3.30"
+build:
+  :toolchain: "./configure --prefix=/tools --without-bash-malloc && make && make install && ln -sv bash /tools/bin/sh"
+  :image: "" 

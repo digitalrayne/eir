@@ -1,0 +1,5 @@
+uri: "https://www.kernel.org/pub/linux/utils/cryptsetup/v1.7/cryptsetup-1.7.2.tar.xz"
+file: "cryptsetup-1.7.2.tar.xz"
+hash: "dbb35dbf5f0c1749168c86c913fe98e872247bfc8425314b494c2423e7e43342"
+name: "cryptsetup"
+version: "1.7.2"

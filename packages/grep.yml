@@ -1,0 +1,5 @@
+file: "grep-2.25.tar.xz"
+uri: "https://ftp.gnu.org/gnu/grep/grep-2.25.tar.xz"
+hash: "e21e83bac50450e0d0d61a42c154ee0dceaacdbf4f604ef6e79071cb8e596830"
+name: "grep"
+version: "2.25"
