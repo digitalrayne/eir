@@ -3,3 +3,5 @@ uri: "https://ftp.gnu.org/gnu/glibc/glibc-2.23.tar.xz"
 hash: "94efeb00e4603c8546209cefb3e1a50a5315c86fa9b078b6fad758e187ce13e9"
 name: "glibc"
 version: "2.23"
+build:
+  :initial: "$EIR_GLIBC_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --libexecdir=$EIR_TOOLCHAIN_PREFIX/lib --host=$EIR_TARGET --build=$EIR_BUILD --without-gd --without-selinux --disable-profile --enable-kernel=2.6.32 --enable-add-ons --with-headers=$EIR_TOOLCHAIN_PREFIX/include libc_cv_forced_unwind=yes libc_cv_c_cleanup=yes && make -j$EIR_CORES && mkdir -p $EIR_TOOLCHAIN_PREFIX/etc && touch $EIR_TOOLCHAIN_PREFIX/etc/ld.so.conf && make install"

@@ -1,0 +1,9 @@
+file: "mpfr-3.1.4.tar.xz"
+hash: "761413b16d749c53e2bfd2b1dfaa3b027b0e793e404b90b5fbaeef60af6517f5"
+uri: "https://ftp.gnu.org/gnu/mpfr/mpfr-3.1.4.tar.xz"
+name: "mpfr"
+version: "3.1.4"
+build:
+  :initial: "$EIR_MPFR_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --with-sysroot=$EIR_TOOLCHAIN_PREFIX --enable-static --build=$EIR_BUILD --host=$EIR_TARGET && make -j$EIR_CORES && make install" 
+  :toolchain: "$EIR_MPFR_SOURCE/configure --prefix=$EIR_PREFIX --with-sysroot=$EIR_PREFIX && make -j$EIR_CORES && make install"
+  :image: ""
