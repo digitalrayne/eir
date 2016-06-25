@@ -5,5 +5,5 @@ name: "binutils"
 version: "2.26"
 build:
   :initial: "$EIR_BINUTILS_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --libexecdir=$EIR_TOOLCHAIN_PREFIX/lib --with-sysroot=$EIR_TOOLCHAIN_PREFIX --build=$EIR_BUILD --target=$EIR_TARGET --disable-nls --disable-werror && make -j$EIR_CORES && make install" 
-  :toolchain: "$EIR_BINUTILS_SOURCE/configure --prefix=$EIR_PREFIX --disable-nls --disable-werror --with-lib-path=$EIR_PREFIX/lib --with-sysroot=$EIR_PREFIX && make -j$EIR_CORES && make install && make -C ld clean && make -C ld LIB_PATH=/usr/lib:/lib && cp -v ld/ld-new $EIR_PREFIX/bin/"
+  :toolchain: "$EIR_BINUTILS_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --with-lib-path=$EIR_TOOLCHAIN_PREFIX/lib --with-sysroot=$EIR_TOOLCHAIN_PREFIX --with-gmp=$EIR_TOOLCHAIN_PREFIX --with-mpfr=$EIR_TOOLCHAIN_PREFIX --with-mpc=$EIR_TOOLCHAIN_PREFIX --build=$EIR_TARGET && make -j$EIR_CORES && make install && make -C ld clean && make -C ld LIB_PATH=/usr/lib:/lib && cp -v ld/ld-new $EIR_TOOLCHAIN_PREFIX/bin/"
   :image: ""

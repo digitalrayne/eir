@@ -5,3 +5,4 @@ name: "glibc"
 version: "2.23"
 build:
   :initial: "$EIR_GLIBC_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --libexecdir=$EIR_TOOLCHAIN_PREFIX/lib --host=$EIR_TARGET --build=$EIR_BUILD --without-gd --without-selinux --disable-profile --enable-kernel=2.6.32 --enable-add-ons --with-headers=$EIR_TOOLCHAIN_PREFIX/include libc_cv_forced_unwind=yes libc_cv_c_cleanup=yes && make -j$EIR_CORES && mkdir -p $EIR_TOOLCHAIN_PREFIX/etc && touch $EIR_TOOLCHAIN_PREFIX/etc/ld.so.conf && make install"
+  :toolchain: "$EIR_GLIBC_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --libexecdir=$EIR_TOOLCHAIN_PREFIX/lib --build=$EIR_TARGET --with-binutils=$EIR_TOOLCHAIN_PREFIX/bin --with-headers=$EIR_TOOLCHAIN_PREFIX/include --enable-add-ons --enable-kernel=2.6.32 --without-gd --without-selinux && make -j$EIR_CORES && make install"

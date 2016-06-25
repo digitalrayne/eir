@@ -5,5 +5,5 @@ name: "gmp"
 version: "6.1.1"
 build:
   :initial: "$EIR_GMP_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --with-sysroot=$EIR_TOOLCHAIN_PREFIX --enable-static --build=$EIR_BUILD --host=$EIR_TARGET && make -j$EIR_CORES && make install" 
-  :toolchain: "$EIR_GMP_SOURCE/configure --prefix=$EIR_PREFIX --with-sysroot=$EIR_PREFIX && make -j$EIR_CORES && make install"
+  :toolchain: "$EIR_GMP_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_TARGET --with-sysroot=$EIR_TOOLCHAIN_PREFIX && make -j$EIR_CORES && make install"
   :image: ""

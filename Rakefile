@@ -230,10 +230,15 @@ puts "Processing package metadata and building tasks for packages".green
           puts "Setting toolchain variables".green
 
           ENV['AR'] = "#{ ENV['EIR_TARGET'] }-ar"
+          ENV['AS'] = "#{ ENV['EIR_TARGET'] }-as"
           ENV['LD'] = "#{ ENV['EIR_TARGET'] }-ld"
-          ENV['CC'] = "#{ ENV['EIR_TARGET'] }-gcc"
-          ENV['CXX'] = "#{ ENV['EIR_TARGET'] }-g++"
+          ENV['NM'] = "#{ ENV['EIR_TARGET'] }-nm"
+          ENV['CC'] = "#{ ENV['EIR_TARGET'] }-gcc -B#{ ENV['EIR_TOOLCHAIN_PREFIX'] }/lib/"
+          ENV['CXX'] = "#{ ENV['EIR_TARGET'] }-g++ -B#{ ENV['EIR_TOOLCHAIN_PREFIX'] }/lib/"
           ENV['RANLIB'] = "#{ ENV['EIR_TARGET'] }-ranlib"
+          ENV['STRIP'] = "#{ ENV['EIR_TARGET'] }-strip"
+          ENV['OBJCOPY'] = "#{ ENV['EIR_TARGET'] }-objcopy"
+          ENV['OBJDUMP'] = "#{ ENV['EIR_TARGET'] }-objdump"
           ENV['PATH' ] = "#{ ENV['EIR_TOOLCHAIN_PATH'] }"
 
         else
@@ -312,7 +317,13 @@ task :build_toolchain => [
   :build_initial_mpc,
   :build_initial_gcc,
   :build_initial_linux,
-  :build_initial_glibc
+  :build_initial_glibc,
+  :build_toolchain_gmp,
+  :build_toolchain_mpfr,
+  :build_toolchain_mpc,
+  :build_toolchain_binutils,
+  :build_toolchain_gcc,
+  :build_toolchain_glibc
 ] do
 end
 
