@@ -1,0 +1,9 @@
+file: "gmp-6.1.1.tar.xz"
+hash: "d36e9c05df488ad630fff17edb50051d6432357f9ce04e34a09b3d818825e831"
+uri: "https://ftp.gnu.org/gnu/gmp/gmp-6.1.1.tar.xz"
+name: "gmp"
+version: "6.1.1"
+build:
+  :initial: "$EIR_GMP_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --with-sysroot=$EIR_TOOLCHAIN_PREFIX --enable-static --build=$EIR_BUILD --host=$EIR_TARGET && make -j$EIR_CORES && make install" 
+  :toolchain: "$EIR_GMP_SOURCE/configure --prefix=$EIR_PREFIX --with-sysroot=$EIR_PREFIX && make -j$EIR_CORES && make install"
+  :image: ""

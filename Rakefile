@@ -15,6 +15,7 @@ require 'xz'
 require 'bzip2/ffi'
 require 'colorize'
 require 'archive/tar/minitar'
+require 'facter'
 
 #Suppress XZ deprecation notices
 XZ.disable_deprecation_notices = true
@@ -47,6 +48,10 @@ def get_package_data ( package )
 
   #Get package name, basename and metadata
   package_data[ 'longname' ] = get_package_longname( package_data[ 'file' ] ) 
+
+  #Set environment variables for package
+  ENV["EIR_#{ package_data[ 'name' ].upcase }_VERSION"] = package_data[ 'version' ]
+  ENV["EIR_#{ package_data[ 'name' ].upcase }_SOURCE"] = "#{ File.dirname(__FILE__) }/build/#{ package_data[ 'longname' ] }"
 
   package_data
 
@@ -177,35 +182,91 @@ puts "Processing package metadata and building tasks for packages".green
   #Accepts package build phase (initial, toolchain, final) as argument.
   if @package_metadata[ package ].key?( 'build' )
     @package_metadata[ package ][ 'build' ].each do |phase,command|
+
+      desc "Patch package #{ @package_metadata[ package ][ 'name' ] } for phase #{ phase }"
+      task "patch_#{ phase }_#{ @package_metadata[ package ][ 'name' ] }".to_sym => "stamps/.stamp_patch_#{ phase }_#{ @package_metadata[ package ][ 'name' ] }"
+
+      desc "Place stamp for package #{ @package_metadata[ package ][ 'name' ] } for phase #{ phase } once built"
+      file "stamps/.stamp_patch_#{ phase }_#{ @package_metadata[ package ][ 'name' ] }" do
+
+        puts "Patching #{ @package_metadata[ package ][ 'name' ]} for phase #{ phase }".green
+        puts "Checking for patches in patches/#{ phase }/#{ @package_metadata[ package ][ 'longname' ] }".light_black
+
+        if File.directory?( "patches/#{ phase }/#{ @package_metadata[ package ][ 'longname' ] }" ) then
+          Dir.glob( "patches/#{ phase }/#{ @package_metadata[ package ][ 'longname' ] }/*.patch" ) do |patch|
+
+            patch_result = false
+
+            puts "Applying patch #{ patch }".blue
+            Dir.chdir( "build/#{ @package_metadata[ package ][ 'longname' ] }" ){
+              patch_result = system("patch -p1 -i $EIR/#{ patch }")
+            }
+
+            raise "Error applying patch #{ patch } to #{ @package_metadata[ package ][ 'longname' ]}".red unless patch_result
+
+          end
+        end 
+
+        FileUtils::touch("stamps/.stamp_patch_#{ phase }_#{ @package_metadata[ package ][ 'name' ] }")       
+ 
+      end
+
       desc "Build package #{ @package_metadata[ package][ 'name' ] } for phase #{ phase }"
-      task "build_#{ phase }_#{ @package_metadata[ package][ 'name' ] }".to_sym do
+      task "build_#{ phase }_#{ @package_metadata[ package][ 'name' ] }".to_sym => "stamps/.stamp_build_#{ phase }_#{ @package_metadata[ package ][ 'name' ] }" 
+
+      desc "Place stamp for package #{ @package_metadata[ package][ 'name' ] } for phase #{ phase } once built"
+      file "stamps/.stamp_build_#{ phase }_#{ @package_metadata[ package ][ 'name' ] }" do
 
         #Fetch build command, skip if it doesn't exist for this stage.
         puts "Building #{ @package_metadata[ package ][ 'name' ]} for phase #{ phase }".green
         puts "Running #{ @package_metadata[ package ][ 'build' ][ phase ] } in build/#{ phase }".light_black
 
+        #Set env variables
+        ENV["EIR_#{ @package_metadata[ package ][ 'name' ].upcase }_BUILD"] = "build/#{ phase }/#{ @package_metadata[ package ][ 'longname' ] }"
+
+        #Set environment variables so long as we're not in initial phase
+        if phase.to_s.eql? "toolchain"  then
+          
+          puts "Setting toolchain variables".green
+
+          ENV['AR'] = "#{ ENV['EIR_TARGET'] }-ar"
+          ENV['LD'] = "#{ ENV['EIR_TARGET'] }-ld"
+          ENV['CC'] = "#{ ENV['EIR_TARGET'] }-gcc"
+          ENV['CXX'] = "#{ ENV['EIR_TARGET'] }-g++"
+          ENV['RANLIB'] = "#{ ENV['EIR_TARGET'] }-ranlib"
+          ENV['PATH' ] = "#{ ENV['EIR_TOOLCHAIN_PATH'] }"
+
+        else
+      
+          puts "Phase: #{ phase }".light_black
+
+        end
+
         #Make sure build directory exists for this stage
         FileUtils::mkdir_p( "build/#{ phase }/#{ @package_metadata[ package ][ 'longname' ] }" )
- 
+
+        #Set default return status
+        build_result = false 
+
         #Run build command in appropriate directory
         Dir.chdir( "build/#{ phase }/#{ @package_metadata[ package ][ 'longname' ] }" ){
-          system("#{ @package_metadata[ package ][ 'build' ][ phase ] }")
-        } 
+          build_result = system("#{ @package_metadata[ package ][ 'build' ][ phase ] }")
+        }
+
+        #Check return and set stamp if needed
+        if build_result then
+
+          FileUtils.touch("stamps/.stamp_build_#{ phase }_#{ @package_metadata[ package ][ 'name' ] }")
+
+        else
+
+          raise "#{ @package_metadata[ package ][ 'longname' ] } failed to build".red 
+
+        end
       end
     end
   else
       puts "No build commands available for package #{ package }"
-  end
-
-  desc "Clean package #{ @package_metadata[ package][ 'name' ] }" 
-  task "clean_#{ @package_metadata[ package][ 'name' ] }".to_sym do
-
-    #Clean package sources
-
-    #Clean build dir for tools
-    
-    #Clean build dir for final install
-
   end
 
   #Generate temporary dependency on extract task, until these can be codified into stages
@@ -244,43 +305,15 @@ end
 task :build_iso do
 end
 
-=begin
 task :build_toolchain => [ 
-  :build_binutils[ 'initial' ], 
-  :build_gcc[ 'initial' ],  
-  :build_linux_headers[ 'initial' ],  
-  :build_glibc[ 'initial' ], 
-  :build_gcc_libstdcpp[ 'initial' ],
-  :build_binutils[ 'toolchain' ],
-  :build_gcc[ 'toolchain' ],
-  :build_ncurses[ 'toolchain' ],
-  :build_bash[ 'toolchain' ],
-  :build_bzip2[ 'toolchain' ],
-  :build_coreutils[ 'toolchain' ],
-  :build_diffutils[ 'toolchain' ],
-  :build_file[ 'toolchain' ], 
-  :build_findutils[ 'toolchain' ],
-  :build_gawk[ 'toolchain' ],
-  :build_gettext[ 'toolchain' ],
-  :build_grep[ 'toolchain' ],
-  :build_gzip[ 'toolchain' ],
-  :build_m4[ 'toolchain' ],
-  :build_make[ 'toolchain' ],
-  :build_make[ 'toolchain' ],
-  :build_patch[ 'toolchain' ],
-  :build_perl[ 'toolchain' ],
-  :build_sed[ 'toolchain' ],
-  :build_tar[ 'toolchain' ],
-  :build_utillinux[ 'toolchain' ],
-  :build_xz[ 'toolchain' ]
- ] do
-  
-  puts "Building toolchain".green  
-
-end 
-=end  
-
-task :build_toolchain => [ :build_initial_binutils ] do
+  :build_initial_binutils,
+  :build_initial_gmp,
+  :build_initial_mpfr,
+  :build_initial_mpc,
+  :build_initial_gcc,
+  :build_initial_linux,
+  :build_initial_glibc
+] do
 end
 
 task :prepare_packages => @packages do
@@ -293,6 +326,24 @@ task :env do
 
   ENV['EIR'] = File.dirname(__FILE__)
   puts "Set $EIR environment variable to #{ ENV['EIR'] }".blue
+
+  ENV['EIR_PREFIX'] = "#{ ENV['EIR'] }/output"
+  puts "Set $EIR_PREFIX environment variable to #{ ENV['EIR_PREFIX'] }".blue
+
+  ENV['EIR_TOOLCHAIN_PREFIX'] = "#{ ENV['EIR_PREFIX'] }/toolchain"
+  puts "Set $EIR_TOOLCHAIN_PREFIX environment variable to #{ ENV['EIR_TOOLCHAIN_PREFIX'] }".blue
+
+  ENV['EIR_CORES'] = Facter.value('processors')['count'].to_s
+  puts "Set $EIR_CORES environment variable to #{ ENV['EIR_CORES'] }".blue
+
+  ENV['EIR_TARGET'] = "#{ Facter.value('architecture').to_s }-eid-linux"
+  puts "Set $EIR_TARGET environment variable to #{ ENV['EIR_TARGET'] }".blue
+
+  ENV['EIR_BUILD'] = %x{gcc -dumpmachine}
+  puts "Set $EIR_BUILD environment variable to #{ ENV['EIR_BUILD'] }".blue
+
+  ENV['EIR_TOOLCHAIN_PATH'] = "#{ ENV['EIR_TOOLCHAIN_PREFIX']}/bin/:#{ ENV['PATH'] }"
+  puts "Set $EIR_TOOLCHAIN_PATH environment variable to #{ ENV['EIR_TOOLCHAIN_PATH'] }".blue
 
 end
 

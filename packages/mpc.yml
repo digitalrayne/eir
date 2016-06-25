@@ -1,0 +1,9 @@
+file: "mpc-1.0.3.tar.gz"
+hash: "617decc6ea09889fb08ede330917a00b16809b8db88c29c31bfbb49cbf88ecc3"
+uri: "https://ftp.gnu.org/gnu/mpc/mpc-1.0.3.tar.gz"
+name: "mpc"
+version: "1.0.3"
+build:
+  :initial: "$EIR_MPC_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --with-sysroot=$EIR_TOOLCHAIN_PREFIX --with-mpfr=$EIR_TOOLCHAIN_PREFIX --enable-static --build=$EIR_BUILD --host=$EIR_TARGET && make -j$EIR_CORES && make install" 
+  :toolchain: "$EIR_MPC_SOURCE/configure --prefix=$EIR_PREFIX --with-sysroot=$EIR_PREFIX --with-mpfr=$EIR_MPFR_BUILD --with-gmp=$EIR_GMP_BUILD && make -j$EIR_CORES && make install"
+  :image: ""

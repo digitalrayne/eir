@@ -3,4 +3,5 @@ uri: "https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.6.2.tar.gz"
 hash: "e3883d13d9887d43f0a990960bc2c7edd10497e1fa8145d353918af533792549"
 name: "linux"
 version: "4.6.2"
-tool: yes
+build:
+  :initial: "cd $EIR_LINUX_SOURCE && make mrproper && make INSTALL_HDR_PATH=$EIR_LINUX_BUILD headers_install && cp -rv $EIR_LINUX_BUILD/include/* $EIR_TOOLCHAIN_PREFIX/include/" 
