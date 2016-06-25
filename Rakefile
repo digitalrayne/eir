@@ -216,19 +216,25 @@ end
 
 directory "build/" do
 
-  Dir.mkdir( "build" ) unless File.directory?( "build" )
+  FileUtils.mkdir_p( "build" )
 
 end
 
 directory "stamps/" do
 
-  Dir.mkdir( "stamps" ) unless File.directory?( "stamps" )
+  FileUtils.mkdir_p( "stamps" )
+
+end
+
+directory "source/" do
+
+  FileUtils.mkdir_p( "source" )
 
 end
 
 directory "output/" do
 
-  Dir.mkdir( "output" ) unless File.directory?( "output" )
+  FileUtils.mkdir_p( "output" )
 
 end
 
@@ -290,4 +296,4 @@ task :env do
 
 end
 
-task :default => [ :env, "build/", "stamps/", "output/", :prepare_packages, :build_toolchain ]
+task :default => [ :env, "build/", "stamps/", "output/", "source/", :prepare_packages, :build_toolchain ]

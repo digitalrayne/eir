@@ -1,5 +1,5 @@
 file: "bzip2-1.0.6.tar.gz"
-uri: "bzip2-1.0.6.tar.gz"
+uri: "http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz"
 hash: "a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd"
 name: "bzip2"
 version: "1.0.6"
