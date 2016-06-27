@@ -1,0 +1,7 @@
+name: "isl"
+version: "0.17.1"
+file: "isl-0.17.1.tar.gz"
+uri: "http://isl.gforge.inria.fr/isl-0.17.1.tar.gz"
+hash: "5a691da0c382dc78d5faabda8d02b97439b3ddb55d9ab8906e5d664218bab50e"
+build:
+  :cross: "LDFLAGS=-Wl,-rpath,$EIR_CROSS_TOOLCHAIN_PREFIX/lib $EIR_ISL_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX --disable-static --with-gmp-prefix=$EIR_CROSS_TOOLCHAIN_PREFIX && make && make install"

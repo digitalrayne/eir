@@ -29,6 +29,7 @@ def get_package_longname ( source )
 
   #get basename (just the filename part of the path)
   name = File.basename( source )
+
   #Remove anything after a dot followed by at least two ASCII characters.
   #This will strip any extensions we're interested in passing to this function,
   #whilst preserving version information in files.
@@ -36,7 +37,6 @@ def get_package_longname ( source )
   #tarballs is for the archive to be extracted into a folder name somethign
   #along the lines of <project name>-<version>
   name.sub(/\.[a-z][a-z].*/, '')
-
 
 end
 
@@ -46,8 +46,15 @@ def get_package_data ( package )
   #Load data from YML
   package_data = YAML.load_file( package ) 
 
+  #Do we have a prefix directory?
+  if package_data[ 'prefix' ].nil?
+    package_data[ 'longname' ] = ''
+  else
+    package_data[ 'longname' ] = "#{ package_data[ 'prefix' ] }/"
+  end
+
   #Get package name, basename and metadata
-  package_data[ 'longname' ] = get_package_longname( package_data[ 'file' ] ) 
+  package_data[ 'longname' ] << get_package_longname( package_data[ 'file' ] ) 
 
   #Set environment variables for package
   ENV["EIR_#{ package_data[ 'name' ].upcase }_VERSION"] = package_data[ 'version' ]
@@ -173,7 +180,7 @@ puts "Processing package metadata and building tasks for packages".green
     puts "Hash verified OK. Going to extract.".blue
 
     puts "Extracting #{ @package_metadata[ package][ 'file' ] } to build/#{ @package_metadata[ package][ 'longname' ] }".green
-    extract_archive( "source/#{ @package_metadata[ package][ 'file' ] }", "build") 
+    extract_archive( "source/#{ @package_metadata[ package][ 'file' ] }", "build/#{ @package_metadata[ package ][ 'prefix' ] }") 
     puts "Extraction finished.".blue
     
   end 
@@ -222,28 +229,36 @@ puts "Processing package metadata and building tasks for packages".green
         puts "Running #{ @package_metadata[ package ][ 'build' ][ phase ] } in build/#{ phase }".light_black
 
         #Set env variables
-        ENV["EIR_#{ @package_metadata[ package ][ 'name' ].upcase }_BUILD"] = "build/#{ phase }/#{ @package_metadata[ package ][ 'longname' ] }"
+        ENV["EIR_#{ @package_metadata[ package ][ 'name' ].upcase }_BUILD"] = "#{ File.dirname(__FILE__) }/build/#{ phase }/#{ @package_metadata[ package ][ 'longname' ] }"
 
         #Set environment variables so long as we're not in initial phase
-        if phase.to_s.eql? "toolchain"  then
-          
-          puts "Setting toolchain variables".green
+        case phase.to_s 
+        when "cross" || "cross32" then 
+        
+          puts "Setting first cross-compilation phase variables".green
+          ENV['PATH'] = ENV['EIR_PATH']
+          puts "Set path to #{ ENV['PATH'] }".blue
 
-          ENV['AR'] = "#{ ENV['EIR_TARGET'] }-ar"
-          ENV['AS'] = "#{ ENV['EIR_TARGET'] }-as"
-          ENV['LD'] = "#{ ENV['EIR_TARGET'] }-ld"
-          ENV['NM'] = "#{ ENV['EIR_TARGET'] }-nm"
-          ENV['CC'] = "#{ ENV['EIR_TARGET'] }-gcc -B#{ ENV['EIR_TOOLCHAIN_PREFIX'] }/lib/"
-          ENV['CXX'] = "#{ ENV['EIR_TARGET'] }-g++ -B#{ ENV['EIR_TOOLCHAIN_PREFIX'] }/lib/"
-          ENV['RANLIB'] = "#{ ENV['EIR_TARGET'] }-ranlib"
-          ENV['STRIP'] = "#{ ENV['EIR_TARGET'] }-strip"
-          ENV['OBJCOPY'] = "#{ ENV['EIR_TARGET'] }-objcopy"
-          ENV['OBJDUMP'] = "#{ ENV['EIR_TARGET'] }-objdump"
-          ENV['PATH' ] = "#{ ENV['EIR_TOOLCHAIN_PATH'] }"
+        when "initial" then
+          
+          puts "Setting initial toolchain variables".green
+
+          ENV['AR'] = "#{ ENV['EIR_HOST'] }-ar"
+          ENV['AS'] = "#{ ENV['EIR_HOST'] }-as"
+          ENV['LD'] = "#{ ENV['EIR_HOST'] }-ld"
+          ENV['NM'] = "#{ ENV['EIR_HOST'] }-nm"
+          ENV['CC'] = "#{ ENV['EIR_HOST'] }-gcc"
+          ENV['CXX'] = "#{ ENV['EIR_HOST'] }-g++"
+          ENV['RANLIB'] = "#{ ENV['EIR_HOST'] }-ranlib"
+          ENV['STRIP'] = "#{ ENV['EIR_HOST'] }-strip"
+          ENV['OBJCOPY'] = "#{ ENV['EIR_HOST'] }-objcopy"
+          ENV['OBJDUMP'] = "#{ ENV['EIR_HOST'] }-objdump"
+
+        when "chroot" then
 
         else
       
-          puts "Phase: #{ phase }".light_black
+          puts "Unknown phase: #{ phase }".light_black
 
         end
 
@@ -304,26 +319,41 @@ directory "output/" do
 
 end
 
+task :clean do
+
+  %w[
+    output
+    build/cross
+    build/cross32
+    stamps
+  ].each do |directory|
+    puts "Removing #{ directory }".red
+    FileUtils.remove_dir( directory, :force => true )
+  end
+
+end
+
 task :build_root_image do
 end
 
 task :build_iso do
 end
 
-task :build_toolchain => [ 
-  :build_initial_binutils,
-  :build_initial_gmp,
-  :build_initial_mpfr,
-  :build_initial_mpc,
-  :build_initial_gcc,
-  :build_initial_linux,
-  :build_initial_glibc,
-  :build_toolchain_gmp,
-  :build_toolchain_mpfr,
-  :build_toolchain_mpc,
-  :build_toolchain_binutils,
-  :build_toolchain_gcc,
-  :build_toolchain_glibc
+task :build_toolchain => [
+  :build_cross_file,
+  :build_cross_linux,
+  :build_cross_m4,
+  :build_cross_ncurses,
+  :build_cross_pkgconfiglite,
+  :build_cross_gmp,
+  :build_cross_mpfr,
+  :build_cross_mpc,
+  :build_cross_isl,
+  :build_cross_binutils,
+  :build_cross_gccstatic,
+  :build_cross32_glibc,
+  :build_cross_glibc,
+  :build_cross_gcc
 ] do
 end
 
@@ -344,17 +374,26 @@ task :env do
   ENV['EIR_TOOLCHAIN_PREFIX'] = "#{ ENV['EIR_PREFIX'] }/toolchain"
   puts "Set $EIR_TOOLCHAIN_PREFIX environment variable to #{ ENV['EIR_TOOLCHAIN_PREFIX'] }".blue
 
+  ENV['EIR_CROSS_TOOLCHAIN_PREFIX'] = "#{ ENV['EIR_PREFIX'] }/cross-toolchain"
+  puts "Set $EIR_CROSS_TOOLCHAIN_PREFIX environment variable to #{ ENV['EIR_CROSS_TOOLCHAIN_PREFIX'] }".blue
+ 
+  ENV['EIR_PATH'] = "#{ ENV['EIR_CROSS_TOOLCHAIN_PREFIX'] }/bin:/bin:/usr/bin"
+  puts "Set $EIR_PATH environment variable to #{ ENV['EIR_PATH'] }".blue
+ 
   ENV['EIR_CORES'] = Facter.value('processors')['count'].to_s
   puts "Set $EIR_CORES environment variable to #{ ENV['EIR_CORES'] }".blue
 
-  ENV['EIR_TARGET'] = "#{ Facter.value('architecture').to_s }-eid-linux"
+  ENV['EIR_TARGET'] = "x86_64-linux-gnu"
   puts "Set $EIR_TARGET environment variable to #{ ENV['EIR_TARGET'] }".blue
 
-  ENV['EIR_BUILD'] = %x{gcc -dumpmachine}
-  puts "Set $EIR_BUILD environment variable to #{ ENV['EIR_BUILD'] }".blue
+  ENV['EIR_TARGET32'] = "i686-linux-gnu"
+  puts "Set $EIR_TARGET32 environment variable to #{ ENV['EIR_TARGET32'] }".blue
+  
+  ENV['EIR_HOST'] = "x86_64-cross-gnu"
+  puts "Set $EIR_HOST environment variable to #{ ENV['EIR_HOST'] }".blue
 
-  ENV['EIR_TOOLCHAIN_PATH'] = "#{ ENV['EIR_TOOLCHAIN_PREFIX']}/bin/:#{ ENV['PATH'] }"
-  puts "Set $EIR_TOOLCHAIN_PATH environment variable to #{ ENV['EIR_TOOLCHAIN_PATH'] }".blue
+  ENV['LC_ALL'] = 'POSIX'
+  puts "Set locale to #{ ENV['LC_ALL'] }".blue
 
 end
 
