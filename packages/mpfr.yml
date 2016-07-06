@@ -5,6 +5,6 @@ name: "mpfr"
 version: "3.1.4"
 build:
   :cross: "LDFLAGS=-Wl,-rpath,$EIR_CROSS_TOOLCHAIN_PREFIX/lib $EIR_MPFR_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX --disable-static --with-gmp=$EIR_CROSS_TOOLCHAIN_PREFIX && make && make install"
-  :initial: "$EIR_MPFR_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --with-sysroot=$EIR_TOOLCHAIN_PREFIX --enable-static --build=$EIR_BUILD --host=$EIR_TARGET && make -j$EIR_CORES && make install" 
+  :initial: "$EIR_MPFR_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --libdir=$EIR_TOOLCHAIN_PREFIX/lib64 && make -j$EIR_CORES && make install" 
   :toolchain: "$EIR_MPFR_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --with-sysroot=$EIR_TOOLCHAIN_PREFIX --with-gmp=$EIR_TOOLCHAIN_PREFIX --build=$EIR_TARGET && make -j$EIR_CORES && make install"
   :image: ""

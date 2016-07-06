@@ -3,3 +3,5 @@ uri: "https://ftp.gnu.org/gnu/tar/tar-1.29.tar.xz"
 hash: "402dcfd0022fd7a1f2c5611f5c61af1cd84910a760a44a688e18ddbff4e9f024"
 version: "1.29"
 name: "tar"
+build:
+  :initial: "touch $EIR_TAR_SOURCE/Makefile.in && touch $EIR_TAR_SOURCE/*/Makefile.in && echo gl_cv_func_wcwidth_works=yes > config.cache && echo gl_cv_func_btowc_eof=yes >> config.cache && echo ac_cv_func_malloc_0_nonnull=yes >> config.cache && echo gl_cv_func_mbrtowc_incomplete_state=yes >> config.cache && echo gl_cv_func_mbrtowc_nul_retval=yes >> config.cache && echo gl_cv_func_mbrtowc_null_arg1=yes >> config.cache && echo gl_cv_func_mbrtowc_null_arg2=yes >> config.cache && echo gl_cv_func_mbrtowc_retval=yes >> config.cache && echo gl_cv_func_wcrtomb_retval=yes >> config.cache && $EIR_TAR_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --cache-file=config.cache && make -j$EIR_CORES && make install"

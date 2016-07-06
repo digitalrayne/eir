@@ -5,6 +5,6 @@ name: "gmp"
 version: "6.1.1"
 build:
   :cross: "$EIR_GMP_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX --enable-cxx --disable-static && make && make install"
-  :initial: "$EIR_GMP_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --with-sysroot=$EIR_TOOLCHAIN_PREFIX --enable-static --build=$EIR_BUILD --host=$EIR_TARGET && make -j$EIR_CORES && make install" 
+  :initial: "CC_FOR_BUILD=gcc $EIR_GMP_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --libdir=$EIR_TOOLCHAIN_PREFIX/lib64 --enable-cxx && make -j$EIR_CORES && make install" 
   :toolchain: "$EIR_GMP_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_TARGET --with-libexecdir=$EIR_TOOLCHAIN_PREFIX/lib && make -j$EIR_CORES && make install"
   :image: ""

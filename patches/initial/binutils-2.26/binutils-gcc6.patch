@@ -1,0 +1,68 @@
+diff -Naur binutils-2.26/gold/arm.cc binutils-patched-2.26/gold/arm.cc
+--- binutils-2.26/gold/arm.cc	2015-11-13 19:27:42.000000000 +1100
++++ binutils-patched-2.26/gold/arm.cc	2016-07-05 10:38:29.555874214 +1000
+@@ -594,7 +594,7 @@
+ 
+     // Name of key.  This is mainly for debugging.
+     std::string
+-    name() const;
++    name() const ATTRIBUTE_UNUSED;
+ 
+    private:
+     // Stub type.
+diff -Naur binutils-2.26/gold/dirsearch.cc binutils-patched-2.26/gold/dirsearch.cc
+--- binutils-2.26/gold/dirsearch.cc	2015-11-13 19:27:42.000000000 +1100
++++ binutils-patched-2.26/gold/dirsearch.cc	2016-07-05 10:38:29.555874214 +1000
+@@ -102,7 +102,7 @@
+     : lock_(), caches_()
+   { }
+ 
+-  ~Dir_caches();
++  ~Dir_caches() ATTRIBUTE_UNUSED;
+ 
+   // Add a cache for a directory.
+   void add(const char*);
+diff -Naur binutils-2.26/gold/testsuite/dynamic_list.sh binutils-patched-2.26/gold/testsuite/dynamic_list.sh
+--- binutils-2.26/gold/testsuite/dynamic_list.sh	2015-11-13 19:27:42.000000000 +1100
++++ binutils-patched-2.26/gold/testsuite/dynamic_list.sh	2016-07-05 10:38:41.789873688 +1000
+@@ -40,7 +40,6 @@
+ check dynamic_list.stdout "main"            # comes via --dynamic-list
+ check dynamic_list.stdout "_ZdlPv"          # "operator delete(void*)"
+ check dynamic_list.stdout "_Z4t1_6v"        # t1_6()
+-check dynamic_list.stdout "_ZN4t16aC2Ev"    # t16a:t16a()
+ check dynamic_list.stdout "_ZN4t16aD1Ev"    # t16a:~t16a()
+ check dynamic_list.stdout "_ZN4t16a1tEv"    # t16a:t()
+ check dynamic_list.stdout "_ZTI4t16a"       # typeinfo for t16a
+diff -Naur binutils-2.26/gold/testsuite/Makefile.am binutils-patched-2.26/gold/testsuite/Makefile.am
+--- binutils-2.26/gold/testsuite/Makefile.am	2015-11-13 19:27:42.000000000 +1100
++++ binutils-patched-2.26/gold/testsuite/Makefile.am	2016-07-05 10:38:41.788873688 +1000
+@@ -2144,7 +2144,6 @@
+ retain_symbols_file_test.so: basic_pic_test.o gcctestdir/ld
+ 	echo 'main' > retain_symbols_file_test.in
+ 	echo 't1' >> retain_symbols_file_test.in
+-	echo '_ZN4t16bC1Ev' >> retain_symbols_file_test.in
+ 	echo '_ZNK4t20a3getEv' >> retain_symbols_file_test.in
+ 	echo '_Z3t18v' >> retain_symbols_file_test.in
+ 	echo '__tcf_0' >> retain_symbols_file_test.in
+diff -Naur binutils-2.26/gold/testsuite/Makefile.in binutils-patched-2.26/gold/testsuite/Makefile.in
+--- binutils-2.26/gold/testsuite/Makefile.in	2015-11-13 19:27:42.000000000 +1100
++++ binutils-patched-2.26/gold/testsuite/Makefile.in	2016-07-05 10:38:41.789873688 +1000
+@@ -6049,7 +6049,6 @@
+ @GCC_TRUE@@NATIVE_LINKER_TRUE@retain_symbols_file_test.so: basic_pic_test.o gcctestdir/ld
+ @GCC_TRUE@@NATIVE_LINKER_TRUE@	echo 'main' > retain_symbols_file_test.in
+ @GCC_TRUE@@NATIVE_LINKER_TRUE@	echo 't1' >> retain_symbols_file_test.in
+-@GCC_TRUE@@NATIVE_LINKER_TRUE@	echo '_ZN4t16bC1Ev' >> retain_symbols_file_test.in
+ @GCC_TRUE@@NATIVE_LINKER_TRUE@	echo '_ZNK4t20a3getEv' >> retain_symbols_file_test.in
+ @GCC_TRUE@@NATIVE_LINKER_TRUE@	echo '_Z3t18v' >> retain_symbols_file_test.in
+ @GCC_TRUE@@NATIVE_LINKER_TRUE@	echo '__tcf_0' >> retain_symbols_file_test.in
+diff -Naur binutils-2.26/gold/testsuite/retain_symbols_file_test.sh binutils-patched-2.26/gold/testsuite/retain_symbols_file_test.sh
+--- binutils-2.26/gold/testsuite/retain_symbols_file_test.sh	2015-11-13 19:27:42.000000000 +1100
++++ binutils-patched-2.26/gold/testsuite/retain_symbols_file_test.sh	2016-07-05 10:38:41.789873688 +1000
+@@ -44,7 +44,6 @@
+ }
+ 
+ check_present 't1'
+-check_present 't16b::t16b()'
+ check_present 't20a::get()'
+ check_present 't18()'
+ check_absent 't10'

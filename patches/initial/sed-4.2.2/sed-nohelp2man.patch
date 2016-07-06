@@ -1,0 +1,36 @@
+diff -Naur sed-4.2.2/Makefile.am sed-patched-4.2.2/Makefile.am
+--- sed-4.2.2/Makefile.am	2012-12-23 01:23:08.000000000 +1100
++++ sed-patched-4.2.2/Makefile.am	2016-07-05 14:47:24.667966673 +1000
+@@ -6,13 +6,13 @@
+ 
+ PACKAGE = sed
+ 
+-SUBDIRS = lib po sed doc testsuite
++SUBDIRS = lib po sed testsuite
+ 
+ noinst_DATA =
+ noinst_HEADERS = basicdefs.h
+ 
+ EXTRA_DIST = BUGS THANKS COPYING.DOC \
+-	bootstrap bootstrap.conf build-aux/texi2dvi build-aux/help2man
++	bootstrap bootstrap.conf build-aux/texi2dvi 
+ 
+ html:
+ 	cd doc && make html
+diff -Naur sed-4.2.2/Makefile.in sed-patched-4.2.2/Makefile.in
+--- sed-4.2.2/Makefile.in	2012-12-23 01:24:18.000000000 +1100
++++ sed-patched-4.2.2/Makefile.in	2016-07-05 14:47:05.696967489 +1000
+@@ -978,11 +978,11 @@
+ # Automake requirements
+ AUTOMAKE_OPTIONS = gnits 1.10 dist-bzip2
+ ACLOCAL_AMFLAGS = -I m4
+-SUBDIRS = lib po sed doc testsuite
++SUBDIRS = lib po sed testsuite
+ noinst_DATA = 
+ noinst_HEADERS = basicdefs.h
+ EXTRA_DIST = BUGS THANKS COPYING.DOC \
+-	bootstrap bootstrap.conf build-aux/texi2dvi build-aux/help2man
++	bootstrap bootstrap.conf build-aux/texi2dvi 
+ 
+ DISTCHECK_CONFIGURE_FLAGS = XGETTEXT='$(SHELL) -c : dummy' $(EXTRA_DC_FLAGS)
+ EXTRA_DC_FLAGS = 

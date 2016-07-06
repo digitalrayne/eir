@@ -1,0 +1,5 @@
+* could not generate persistent MAC address for veth no such file or directory
+* unhandled docker events - docker client library garbage
+* placement table grows, but placements and backends don't seem to shrink
+* Dropped shine-weaver message for connection with Public=true
+* increase timeout to 60 seconds and remove -a from docker listing, change number of containers to 2 (header plus 1)

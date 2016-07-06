@@ -4,4 +4,5 @@ uri: "https://ftp.gnu.org/gnu/ncurses/ncurses-6.0.tar.gz"
 name: "ncurses"
 version: "6.0"
 build:
-  :cross: "AWS=gawk CPP='cpp -P' $EIR_NCURSES_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX --without-debug && make -C include && make -C progs tic && install -D -v -m755 progs/tic --target-directory $EIR_TOOLCHAIN_PREFIX/bin/"
+  :cross: "AWK=gawk CPP='cpp -P' $EIR_NCURSES_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX --without-debug && make -C include && make -C progs tic && install -D -v -m755 progs/tic --target-directory $EIR_TOOLCHAIN_PREFIX/bin/"
+  :initial: "$EIR_NCURSES_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --with-shared --build=$EIR_HOST --host=$EIR_TARGET --without-debug --without-ada --enable-overwrite --with-build-cc=gcc --libdir=$EIR_TOOLCHAIN_PREFIX/lib64 && make -j$EIR_CORES && make install" 

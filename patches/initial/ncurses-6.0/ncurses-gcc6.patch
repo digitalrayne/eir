@@ -1,0 +1,30 @@
+diff -Naur ncurses-6.0/ncurses/base/MKlib_gen.sh ncurses-patched-6.0/ncurses/base/MKlib_gen.sh
+--- ncurses-6.0/ncurses/base/MKlib_gen.sh	2015-08-07 10:48:24.000000000 +1000
++++ ncurses-patched-6.0/ncurses/base/MKlib_gen.sh	2016-07-05 11:03:23.922809911 +1000
+@@ -491,11 +491,22 @@
+ 	-e 's/gen_$//' \
+ 	-e 's/  / /g' >>$TMP
+ 
++cat >$ED1 <<EOF
++s/  / /g
++s/^ //
++s/ $//
++s/P_NCURSES_BOOL/NCURSES_BOOL/g
++EOF
++
++# A patch discussed here:
++#	https://gcc.gnu.org/ml/gcc-patches/2014-06/msg02185.html
++# introduces spurious #line markers.  Work around that by ignoring the system's
++# attempt to define "bool" and using our own symbol here.
++sed -e 's/bool/P_NCURSES_BOOL/g' $TMP > $ED2
++cat $ED2 >$TMP
++
+ $preprocessor $TMP 2>/dev/null \
+-| sed \
+-	-e 's/  / /g' \
+-	-e 's/^ //' \
+-	-e 's/_Bool/NCURSES_BOOL/g' \
++| sed -f $ED1 \
+ | $AWK -f $AW2 \
+ | sed -f $ED3 \
+ | sed \

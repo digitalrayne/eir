@@ -3,3 +3,5 @@ uri: "https://ftp.gnu.org/gnu/texinfo/texinfo-6.1.tar.xz"
 hash: "ac68394ce21b2420ba7ed7cec65d84aacf308cc88e9bf4716fcfff88286883d2"
 name: "texinfo"
 version: "6.1"
+build:
+  :initial: "PERL=/usr/bin/perl $EIR_TEXINFO_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET && make -j$EIR_CORES && make install"

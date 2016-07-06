@@ -206,10 +206,10 @@ puts "Processing package metadata and building tasks for packages".green
 
             puts "Applying patch #{ patch }".blue
             Dir.chdir( "build/#{ @package_metadata[ package ][ 'longname' ] }" ){
-              patch_result = system("patch -p1 -i $EIR/#{ patch }")
+              patch_result = system("patch -N -p1 -i $EIR/#{ patch }")
             }
 
-            raise "Error applying patch #{ patch } to #{ @package_metadata[ package ][ 'longname' ]}".red unless patch_result
+            raise "Error applying patch #{ patch } to #{ @package_metadata[ package ][ 'longname' ]}".red unless patch_result 
 
           end
         end 
@@ -233,7 +233,7 @@ puts "Processing package metadata and building tasks for packages".green
 
         #Set environment variables so long as we're not in initial phase
         case phase.to_s 
-        when "cross" || "cross32" then 
+        when "cross", "cross32" then 
         
           puts "Setting first cross-compilation phase variables".green
           ENV['PATH'] = ENV['EIR_PATH']
@@ -243,16 +243,17 @@ puts "Processing package metadata and building tasks for packages".green
           
           puts "Setting initial toolchain variables".green
 
-          ENV['AR'] = "#{ ENV['EIR_HOST'] }-ar"
-          ENV['AS'] = "#{ ENV['EIR_HOST'] }-as"
-          ENV['LD'] = "#{ ENV['EIR_HOST'] }-ld"
-          ENV['NM'] = "#{ ENV['EIR_HOST'] }-nm"
-          ENV['CC'] = "#{ ENV['EIR_HOST'] }-gcc"
-          ENV['CXX'] = "#{ ENV['EIR_HOST'] }-g++"
-          ENV['RANLIB'] = "#{ ENV['EIR_HOST'] }-ranlib"
-          ENV['STRIP'] = "#{ ENV['EIR_HOST'] }-strip"
-          ENV['OBJCOPY'] = "#{ ENV['EIR_HOST'] }-objcopy"
-          ENV['OBJDUMP'] = "#{ ENV['EIR_HOST'] }-objdump"
+          ENV['PATH'] = ENV['EIR_PATH']
+          ENV['AR'] = "#{ ENV['EIR_TARGET'] }-ar"
+          ENV['AS'] = "#{ ENV['EIR_TARGET'] }-as"
+          ENV['LD'] = "#{ ENV['EIR_TARGET'] }-ld"
+          ENV['NM'] = "#{ ENV['EIR_TARGET'] }-nm"
+          ENV['CC'] = "#{ ENV['EIR_TARGET'] }-gcc -m64"
+          ENV['CXX'] = "#{ ENV['EIR_TARGET'] }-g++ -m64"
+          ENV['RANLIB'] = "#{ ENV['EIR_TARGET'] }-ranlib"
+          ENV['STRIP'] = "#{ ENV['EIR_TARGET'] }-strip"
+          ENV['OBJCOPY'] = "#{ ENV['EIR_TARGET'] }-objcopy"
+          ENV['OBJDUMP'] = "#{ ENV['EIR_TARGET'] }-objdump"
 
         when "chroot" then
 
@@ -350,10 +351,44 @@ task :build_toolchain => [
   :build_cross_mpc,
   :build_cross_isl,
   :build_cross_binutils,
+  :patch_cross_gccstatic,
   :build_cross_gccstatic,
   :build_cross32_glibc,
   :build_cross_glibc,
-  :build_cross_gcc
+  :patch_cross_gcc,
+  :build_cross_gcc,
+  :build_initial_gmp,
+  :build_initial_mpfr,
+  :build_initial_mpc,
+  :build_initial_isl,
+  :build_initial_zlib,
+  :patch_initial_binutils,
+  :build_initial_binutils,
+  :build_initial_gcc,
+  :patch_initial_ncurses,
+  :build_initial_ncurses,
+  :build_initial_bash,
+  :build_initial_bzip2,
+  :build_initial_check,
+  :patch_initial_coreutils,
+  :build_initial_coreutils,
+  :build_initial_diffutils,
+  :build_initial_file,
+  :build_initial_findutils,
+  :build_initial_gawk,
+  :build_initial_gettext,
+  :build_initial_grep,
+  :build_initial_gzip,
+  :build_initial_make,
+  :build_initial_patch,
+  :patch_initial_sed,
+  :build_initial_sed,
+  :build_initial_tar,
+  :patch_initial_texinfo,
+  :build_initial_texinfo,
+  :build_initial_busybox,
+  :build_initial_nano,
+  :build_initial_xz
 ] do
 end
 
@@ -383,10 +418,10 @@ task :env do
   ENV['EIR_CORES'] = Facter.value('processors')['count'].to_s
   puts "Set $EIR_CORES environment variable to #{ ENV['EIR_CORES'] }".blue
 
-  ENV['EIR_TARGET'] = "x86_64-linux-gnu"
+  ENV['EIR_TARGET'] = "x86_64-unknown-linux-gnu"
   puts "Set $EIR_TARGET environment variable to #{ ENV['EIR_TARGET'] }".blue
 
-  ENV['EIR_TARGET32'] = "i686-linux-gnu"
+  ENV['EIR_TARGET32'] = "i686-pc-linux-gnu"
   puts "Set $EIR_TARGET32 environment variable to #{ ENV['EIR_TARGET32'] }".blue
   
   ENV['EIR_HOST'] = "x86_64-cross-gnu"

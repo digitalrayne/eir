@@ -3,3 +3,5 @@ uri: "https://ftp.gnu.org/gnu/findutils/findutils-4.6.0.tar.gz"
 hash: "ded4c9f73731cd48fec3b6bdaccce896473b6d8e337e9612e16cf1431bb1169d"
 name: "findutils"
 version: "4.6.0"
+build:
+  :initial: "echo gl_cv_func_wcwidth_works=yes > config.cache && echo ac_cv_func_fnmatch_gnu=yes >> config.cache && $EIR_FINDUTILS_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --cache-file=config.cache && make -j$EIR_CORES && make install"

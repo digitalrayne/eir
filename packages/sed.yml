@@ -3,3 +3,5 @@ uri: "https://ftp.gnu.org/gnu/sed/sed-4.2.2.tar.bz2"
 hash: "f048d1838da284c8bc9753e4506b85a1e0cc1ea8999d36f6995bcb9460cddbd7"
 name: "sed"
 version: "4.2.2"
+build:
+  :initial: "$EIR_SED_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET && make -j$EIR_CORES && make install"

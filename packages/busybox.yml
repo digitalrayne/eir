@@ -1,0 +1,7 @@
+file: "busybox-1.25.0.tar.bz2"
+uri: "https://www.busybox.net/downloads/busybox-1.25.0.tar.bz2"
+hash: "5a0fe06885ee1b805fb459ab6aaa023fe4f2eccee4fb8c0fd9a6c17c0daca2fc"
+name: "busybox"
+version: "1.25.0"
+build:
+  :initial: "cp -av $EIR_BUSYBOX_SOURCE/* . && make defconfig && echo CONFIG_CROSS_COMPILER_PREFIX=$EIR_TARGET- >> .config && make CROSS=$EIR_TARGET- PREFIX=$EIR_TOOLCHAIN_PREFIX EXTRA_CFLAGS=-m64 busybox && make PREFIX=$EIR_TOOLCHAIN_PREFIX install"

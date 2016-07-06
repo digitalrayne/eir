@@ -3,3 +3,5 @@ uri: "http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz"
 hash: "a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd"
 name: "bzip2"
 version: "1.0.6"
+build:
+  :initial: "cp -av $EIR_BZIP2_SOURCE/* . && sed -i'' -e 's@^\\(all:.*\\) test@\\1@g' -e 's@/lib\\(/\\| \\|$\\)@/lib64\\1@g' Makefile && make CC=\"$CC\" AR=\"$AR\" RANLIB=\"$RANLIB\" -j$EIR_CORES && make PREFIX=$EIR_TOOLCHAIN_PREFIX install"

@@ -3,3 +3,5 @@ uri: "https://ftp.gnu.org/gnu/diffutils/diffutils-3.3.tar.xz"
 hash: "a25e89a8ab65fded1731e4186be1bb25cda967834b6df973599cdcd5abdfc19c"
 version: "3.3"
 name: "diffutils"
+build:
+  :initial: "touch $EIR_DIFFUTILS_SOURCE/Makefile.in && touch $EIR_DIFFUTILS_SOURCE/*/Makefile.in && $EIR_DIFFUTILS_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET && make -j$EIR_CORES && make install"
