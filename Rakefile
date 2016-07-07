@@ -326,6 +326,7 @@ task :clean do
     output
     build/cross
     build/cross32
+    build/initial
     stamps
   ].each do |directory|
     puts "Removing #{ directory }".red
