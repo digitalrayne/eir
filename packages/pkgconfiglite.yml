@@ -4,4 +4,4 @@ name: "pkgconfiglite"
 version: "0.28-1"
 file: "pkg-config-lite-0.28-1.tar.gz"
 build:
-  :cross: "cd $EIR_PKGCONFIGLITE_SOURCE && touch Makefile.in && touch */Makefile.in && cd $EIR_PKGCONFIGLITE_BUILD && $EIR_PKGCONFIGLITE_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX --host=$EIR_TARGET --disable-dependency-tracking --with-pc-path=$EIR_TOOLCHAIN_PREFIX/lib64/pkgconfig:$EIR_TOOLCHAIN_PREFIX/share/pkgconfig && make && make install"
+  :cross: "cd $EIR_PKGCONFIGLITE_SOURCE && aclocal && libtoolize --force && autoheader && touch Makefile.in && touch */Makefile.in && cd $EIR_PKGCONFIGLITE_BUILD && $EIR_PKGCONFIGLITE_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX --host=$EIR_TARGET --disable-dependency-tracking --with-pc-path=$EIR_TOOLCHAIN_PREFIX/lib64/pkgconfig:$EIR_TOOLCHAIN_PREFIX/share/pkgconfig && make && make install"
