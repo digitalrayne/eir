@@ -14,7 +14,8 @@ require 'zlib'
 require 'xz'
 require 'bzip2/ffi'
 require 'colorize'
-require 'archive/tar/minitar'
+#require 'archive/tar/minitar'
+require 'rubygems/package'
 require 'facter'
 
 #Suppress XZ deprecation notices
@@ -137,14 +138,26 @@ def extract_archive ( source, dest )
   #get decompressor handle
   tar_handle = get_tar_handle( source )
   #unpack files from archive
-  Archive::Tar::Minitar.unpack( tar_handle, dest,
-    &lambda do |action, name, stats|
-      if action == :file_done or action == :dir
-        puts "#{ name }".blue
+  Gem::Package::TarReader.new( tar_handle ) do |tar|
+    tar.each do |entry|
+      if entry.directory?
+        FileUtils.mkdir_p( "#{ dest }/#{ entry.full_name }" )
+      elsif entry.file?
+        FileUtils.mkdir_p( "#{ dest }/#{ File.dirname( entry.full_name ) }")
+        #skip errors here, but show the file in orange
+        begin
+          File.open( "#{ dest }/#{ entry.full_name }", "wb" ) do |f|
+            f.write( entry.read )
+          end
+        rescue
+          puts entry.full_name.yellow
+        else
+          puts entry.full_name.green
+        end
+        File.chmod( entry.header.mode, "#{ dest }/#{ entry.full_name }")
       end
     end
-  )
-
+  end
 end
 
 #Generate package tasks for each package.
@@ -167,7 +180,7 @@ puts "Processing package metadata and building tasks for packages".green
 
   end
 
-  #Verify source, then extract package by getting appropriate decompressor handle, and passing to minitar.
+  #Verify source, then extract package by getting appropriate decompressor handle, and passing to tarreader.
   #TODO: Write better tar handler to give us more control over decompressor handling, as XZ needs special handling.
   desc "Verify & extract #{ @package_metadata[ package][ 'file' ] } to build/#{ @package_metadata[ package][ 'longname' ] }"
   directory "build/#{ @package_metadata[ package][ 'longname' ] }" => "source/#{ @package_metadata[ package ][ 'file' ] }" do 
@@ -380,7 +393,6 @@ task :build_toolchain => [
   :build_initial_ncurses,
   :build_initial_bash,
   :build_initial_bzip2,
-  :build_initial_check,
   :patch_initial_coreutils,
   :build_initial_coreutils,
   :build_initial_diffutils,
