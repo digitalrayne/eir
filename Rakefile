@@ -231,6 +231,12 @@ puts "Processing package metadata and building tasks for packages".green
         #Set env variables
         ENV["EIR_#{ @package_metadata[ package ][ 'name' ].upcase }_BUILD"] = "#{ File.dirname(__FILE__) }/build/#{ phase }/#{ @package_metadata[ package ][ 'longname' ] }"
 
+        #Print CFLAGS
+        if ( ENV.has_key?( 'CFLAGS' ) ) then
+          puts "Detected additional CFLAGS: #{ ENV['CFLAGS'] }".blue
+          ENV['CXXFLAGS'] = ENV['CFLAGS']
+        end
+
         #Set environment variables so long as we're not in initial phase
         case phase.to_s 
         when "cross", "cross32" then 
@@ -327,10 +333,14 @@ task :clean do
     build/cross
     build/cross32
     build/initial
-    stamps
   ].each do |directory|
     puts "Removing #{ directory }".red
     FileUtils.remove_dir( directory, :force => true )
+  end
+
+  Dir.glob( 'stamps/.stamp_build_*' ).each do |stamp|
+    puts "Clearing stamp #{ stamp }".red
+    File.delete( stamp )
   end
 
 end
@@ -389,7 +399,8 @@ task :build_toolchain => [
   :build_initial_texinfo,
   :build_initial_busybox,
   :build_initial_nano,
-  :build_initial_xz
+  :build_initial_xz,
+  :build_initial_ruby
 ] do
 end
 
