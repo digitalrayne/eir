@@ -1,7 +1,0 @@
-file: "check-0.10.0.tar.gz"
-uri: "http://sourceforge.net/projects/check/files/check/0.10.0/check-0.10.0.tar.gz"
-hash: "f5f50766aa6f8fe5a2df752666ca01a950add45079aa06416b83765b1cf71052"
-name: "check"
-version: "0.10.0"
-build:
-  :initial: "$EIR_CHECK_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --libdir=$EIR_TOOLCHAIN_PREFIX/lib64 --build=$EIR_HOST --host=$EIR_TARGET && make -j$EIR_CORES && make install" 
