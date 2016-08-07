@@ -4,4 +4,7 @@ hash: "5a0fe06885ee1b805fb459ab6aaa023fe4f2eccee4fb8c0fd9a6c17c0daca2fc"
 name: "busybox"
 version: "1.25.0"
 build:
-  :initial: "cp -av $EIR_BUSYBOX_SOURCE/* . && make defconfig && echo CONFIG_CROSS_COMPILER_PREFIX=$EIR_TARGET- >> .config && make CROSS=$EIR_TARGET- PREFIX=$EIR_TOOLCHAIN_PREFIX EXTRA_CFLAGS=-m64 busybox && make PREFIX=$EIR_TOOLCHAIN_PREFIX install"
+  :initial: > 
+    make KBUILD_SRC=$EIR_BUSYBOX_SOURCE -f $EIR_BUSYBOX_SOURCE/Makefile defconfig &&
+    make CROSS=$EIR_TARGET- CONFIG_PREFIX=$EIR_TOOLCHAIN_PREFIX EXTRA_CFLAGS=-m64 && 
+    make O=$EIR_BUSYBOX_BUILD CONFIG_PREFIX=$EIR_TOOLCHAIN_PREFIX install

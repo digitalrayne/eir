@@ -4,5 +4,11 @@ uri: "ftp://ftp.astron.com/pub/file/file-5.28.tar.gz"
 name: "file"
 version: "5.28"
 build:
-  :cross: "$EIR_FILE_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX && make && make install"
-  :initial: "$EIR_FILE_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --libdir=$EIR_TOOLCHAIN_PREFIX/lib64 --build=$EIR_HOST --host=$EIR_TARGET && make -j$EIR_CORES && make install"
+  :cross: >
+    $EIR_FILE_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX && 
+    make && 
+    make install
+  :initial: >
+    $EIR_FILE_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --libdir=$EIR_TOOLCHAIN_PREFIX/lib --build=$EIR_HOST --host=$EIR_TARGET && 
+    make -j$EIR_CORES && 
+    make install

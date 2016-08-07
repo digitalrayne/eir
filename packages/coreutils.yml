@@ -4,4 +4,9 @@ hash: "31e67c057a5b32a582f26408c789e11c2e8d676593324849dcf5779296cdce87"
 name: "coreutils"
 version: "8.25"
 build:
-  :initial: "echo fu_cv_sys_stat_starfs2_bsize=yes > config.cache && echo gl_cv_func_working_mkstemp=yes >> config.cache && $EIR_COREUTILS_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --enable-install-program=hostname --cache-file=config.cache && make -j$EIR_CORES && make install"
+  :initial: >
+    echo fu_cv_sys_stat_starfs2_bsize=yes > config.cache && 
+    echo gl_cv_func_working_mkstemp=yes >> config.cache && 
+    $EIR_COREUTILS_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --enable-install-program=hostname --cache-file=config.cache && 
+    make && 
+    make install

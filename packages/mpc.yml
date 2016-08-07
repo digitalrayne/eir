@@ -4,7 +4,11 @@ uri: "https://ftp.gnu.org/gnu/mpc/mpc-1.0.3.tar.gz"
 name: "mpc"
 version: "1.0.3"
 build:
-  :cross: "LDFLAGS=-Wl,-rpath,$EIR_CROSS_TOOLCHAIN_PREFIX/lib $EIR_MPC_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX --disable-static --with-gmp=$EIR_CROSS_TOOLCHAIN_PREFIX --with-mpfr=$EIR_CROSS_TOOLCHAIN_PREFIX && make && make install"
-  :initial: "$EIR_MPC_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --libdir=$EIR_TOOLCHAIN_PREFIX/lib64 && make -j$EIR_CORES && make install" 
-  :toolchain: "$EIR_MPC_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --with-sysroot=$EIR_TOOLCHAIN_PREFIX --with-mpfr=$EIR_TOOLCHAIN_PREFIX --with-gmp=$EIR_TOOLCHAIN_PREFIX --build=$EIR_TARGET && make -j$EIR_CORES && make install"
-  :image: ""
+  :cross: >
+    LDFLAGS=-Wl,-rpath,$EIR_CROSS_TOOLCHAIN_PREFIX/lib $EIR_MPC_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX --disable-static --with-gmp=$EIR_CROSS_TOOLCHAIN_PREFIX --with-mpfr=$EIR_CROSS_TOOLCHAIN_PREFIX && 
+    make && 
+    make install
+  :initial: >
+    $EIR_MPC_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --libdir=$EIR_TOOLCHAIN_PREFIX/lib && 
+    make -j$EIR_CORES && 
+    make install

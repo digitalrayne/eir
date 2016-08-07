@@ -4,7 +4,11 @@ file: "binutils-2.26.tar.bz2"
 name: "binutils"
 version: "2.26"
 build:
-  :cross: "AR=ar AS=as $EIR_BINUTILS_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX --host=$EIR_HOST --target=$EIR_TARGET --with-sysroot=$EIR_PREFIX --with-lib-path=/toolchain/lib:/toolchain/lib64 --disable-nls --disable-static --enable-64bit-bfd --enable-gold=yes --enable-plugins --enable-threads --disable-werror && make && make install"
-  :initial: "$EIR_BINUTILS_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --libdir=$EIR_TOOLCHAIN_PREFIX/lib64 --with-lib-path=/toolschain/lib64:/toolchain/lib --build=$EIR_HOST --host=$EIR_TARGET --target=$EIR_TARGET --disable-nls --enable-shared --enable-64bit-bfd --enable-gold=yes --enable-plugins --enable-threads && make -j$EIR_CORES && make install" 
-  :toolchain: "$EIR_BINUTILS_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --with-lib-path=$EIR_TOOLCHAIN_PREFIX/lib --with-sysroot=$EIR_TOOLCHAIN_PREFIX --with-gmp=$EIR_TOOLCHAIN_PREFIX --with-mpfr=$EIR_TOOLCHAIN_PREFIX --with-mpc=$EIR_TOOLCHAIN_PREFIX --build=$EIR_TARGET && make -j$EIR_CORES && make install && make -C ld clean && make -C ld LIB_PATH=/usr/lib:/lib && cp -v ld/ld-new $EIR_TOOLCHAIN_PREFIX/bin/"
-  :image: ""
+  :cross: > 
+    AR=ar AS=as $EIR_BINUTILS_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX --host=$EIR_HOST --target=$EIR_TARGET --with-sysroot=$EIR_CROSS_TOOLCHAIN_PREFIX --with-lib-path=/lib:/lib32 --disable-nls --disable-static --enable-64bit-bfd --enable-gold=yes --enable-plugins --enable-threads --disable-werror && 
+    make && 
+    make install
+  :initial: >
+    $EIR_BINUTILS_SOURCE/configure --with-sysroot=$EIR_TOOLCHAIN_PREFIX --prefix=$EIR_TOOLCHAIN_PREFIX --libdir=$EIR_TOOLCHAIN_PREFIX/lib --with-lib-path=/lib:/lib32 --build=$EIR_HOST --host=$EIR_TARGET --target=$EIR_TARGET --disable-nls --enable-shared --enable-64bit-bfd --enable-gold=yes --enable-plugins --enable-threads && 
+    make -j$EIR_CORES && 
+    make install

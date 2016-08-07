@@ -4,4 +4,9 @@ hash: "e21e83bac50450e0d0d61a42c154ee0dceaacdbf4f604ef6e79071cb8e596830"
 name: "grep"
 version: "2.25"
 build:
-  :initial: "touch $EIR_GREP_SOURCE/Makefile.in && touch $EIR_GREP_SOURCE/*/Makefile.in && $EIR_GREP_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --without-included-regex && make -j$EIR_CORES && make install"
+  :initial: >
+    touch $EIR_GREP_SOURCE/Makefile.in && 
+    touch $EIR_GREP_SOURCE/*/Makefile.in && 
+    $EIR_GREP_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --without-included-regex && 
+    make -j$EIR_CORES && 
+    make install

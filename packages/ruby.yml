@@ -4,4 +4,7 @@ hash: "b87c738cb2032bf4920fef8e3864dc5cf8eae9d89d8d523ce0236945c5797dcd"
 name: "ruby"
 version: "2.3.1"
 build:
-  :initial: "$EIR_RUBY_SOURCE/configure --prefix=/usr --bindir=/bin --sbindir=/sbin --libdir=/lib64 --with-destdir=$EIR_TOOLCHAIN_PREFIX --exec-prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET && make -j$EIR_CORES && make install"
+  :initial: >
+    $EIR_RUBY_SOURCE/configure --prefix=/usr --bindir=/bin --sbindir=/sbin --libdir=/lib --with-destdir=$EIR_TOOLCHAIN_PREFIX --exec-prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET && 
+    make -j$EIR_CORES && 
+    make install

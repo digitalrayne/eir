@@ -219,7 +219,7 @@ puts "Processing package metadata and building tasks for packages".green
 
             puts "Applying patch #{ patch }".blue
             Dir.chdir( "build/#{ @package_metadata[ package ][ 'longname' ] }" ){
-              patch_result = system("patch -N -p1 -i $EIR/#{ patch }")
+              patch_result = system("patch -N -p1 -i #{ ENV['EIR'] }/#{ patch }")
             }
 
             raise "Error applying patch #{ patch } to #{ @package_metadata[ package ][ 'longname' ]}".red unless patch_result 
@@ -274,7 +274,7 @@ puts "Processing package metadata and building tasks for packages".green
           ENV['OBJCOPY'] = "#{ ENV['EIR_TARGET'] }-objcopy"
           ENV['OBJDUMP'] = "#{ ENV['EIR_TARGET'] }-objdump"
 
-        when "chroot" then
+        when "final" then
 
         else
       
@@ -409,8 +409,8 @@ task :build_toolchain => [
   :build_initial_tar,
   :patch_initial_texinfo,
   :build_initial_texinfo,
+  :build_initial_pam,
   :build_initial_busybox,
-  :build_initial_nano,
   :build_initial_xz,
   :build_initial_ruby
 ] do
@@ -439,7 +439,7 @@ task :env do
   ENV['EIR_PATH'] = "#{ ENV['EIR_CROSS_TOOLCHAIN_PREFIX'] }/bin:/bin:/usr/bin"
   puts "Set $EIR_PATH environment variable to #{ ENV['EIR_PATH'] }".blue
  
-  ENV['EIR_CORES'] = Facter.value('processors')['count'].to_s
+  ENV['EIR_CORES'] = ( Facter.value('processors')['count'] * 2 ).to_s
   puts "Set $EIR_CORES environment variable to #{ ENV['EIR_CORES'] }".blue
 
   ENV['EIR_TARGET'] = "x86_64-unknown-linux-gnu"

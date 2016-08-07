@@ -4,4 +4,20 @@ uri: "https://ftp.gnu.org/gnu/bash/bash-4.3.30.tar.gz"
 name: "bash"
 version: "4.3.30"
 build:
-  :initial: "echo ac_cv_func_mmap_fixed_mapped=yes > config.cache && echo ac_cv_func_strcoll_works=yes >> config.cache && echo ac_cv_func_working_mktime=yes >> config.cache && echo bash_cv_func_sigsetjmp=present >> config.cache && echo bash_cv_getcwd_malloc=yes >> config.cache && echo bash_cv_job_control_missing=present >> config.cache && echo bash_cv_printf_a_format=yes >> config.cache && echo bash_cv_sys_named_pipes=present >> config.cache && echo bash_cv_ulimit_maxfds=yes >> config.cache && echo bash_cv_under_sys_siglist=yes >> config.cache && echo bash_cv_unusable_rtsigs=no >> config.cache && echo gt_cv_int_divbyzero_sigfpe=yes >> config.cache && $EIR_BASH_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --without-bash-malloc --cache-file=config.cache && make -j$EIR_CORES && make install"
+  :initial: >
+    echo ac_cv_func_mmap_fixed_mapped=yes > config.cache && 
+    echo ac_cv_func_strcoll_works=yes >> config.cache && 
+    echo ac_cv_func_working_mktime=yes >> config.cache && 
+    echo bash_cv_func_sigsetjmp=present >> config.cache && 
+    echo bash_cv_getcwd_malloc=yes >> config.cache && 
+    echo bash_cv_job_control_missing=present >> config.cache && 
+    echo bash_cv_printf_a_format=yes >> config.cache && 
+    echo bash_cv_sys_named_pipes=present >> config.cache && 
+    echo bash_cv_ulimit_maxfds=yes >> config.cache && 
+    echo bash_cv_under_sys_siglist=yes >> config.cache && 
+    echo bash_cv_unusable_rtsigs=no >> config.cache && 
+    echo gt_cv_int_divbyzero_sigfpe=yes >> config.cache && 
+    $EIR_BASH_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --without-bash-malloc --cache-file=config.cache && 
+    make -j$EIR_CORES && 
+    make install
+
