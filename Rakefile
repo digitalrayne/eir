@@ -288,6 +288,14 @@ puts "Processing package metadata and building tasks for packages".green
         #Set default return status
         build_result = false 
 
+        #touch automake files if they exist
+        %w[configure.ac aclocal.m4 configure Makefile.am Makefile.in].each do |file|
+          if File.exist?( "build/#{ @package_metadata[ package ][ 'longname' ] }/#{ file }" ) then
+            puts "Updating modification time on #{ file }".light_black
+            FileUtils.touch( "build/#{ @package_metadata[ package ][ 'longname' ] }/#{ file }" )
+          end
+        end
+        
         #Run build command in appropriate directory
         Dir.chdir( "build/#{ phase }/#{ @package_metadata[ package ][ 'longname' ] }" ){
           build_result = system("#{ @package_metadata[ package ][ 'build' ][ phase ] }")

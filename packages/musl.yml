@@ -1,0 +1,14 @@
+file: "musl-1.1.15.tar.gz"
+hash: "97e447c7ee2a7f613186ec54a93054fe15469fe34d7d323080f7ef38f5ecb0fa"
+uri: "https://www.musl-libc.org/releases/musl-1.1.15.tar.gz"
+name: "musl"
+version: "1.1.15"
+build:
+  :cross32: >
+    BUILD_CC=gcc CC="$EIR_TARGET-gcc -m32" CXX="$EIR_TARGET-g++ -m32" CROSS_COMPILE=$EIR_TARGET- AR=$EIR_TARGET-ar RANLIB=$EIR_TARGET-ranlib $EIR_MUSL_SOURCE/configure --prefix=/ --host=$EIR_TARGET32 --build=$EIR_HOST --includedir=$EIR_TOOLCHAIN_PREFIX/include --libdir=/lib32 $EIR_TARGET32 && 
+    make && 
+    make DESTDIR=$EIR_TOOLCHAIN_PREFIX install
+  :cross: >
+    BUILD_CC=gcc CC="$EIR_TARGET-gcc -m64" CXX="$EIR_TARGET-g++ -m64" CROSS_COMPILE=$EIR_TARGET- AR=$EIR_TARGET-ar RANLIB=$EIR_TARGET-ranlib $EIR_MUSL_SOURCE/configure --prefix=/ --host=$EIR_TARGET --build=$EIR_HOST --enable-multi-arch --libdir=/lib --includedir=$EIR_TOOLCHAIN_PREFIX/include && 
+    make && 
+    make DESTDIR=$EIR_TOOLCHAIN_PREFIX install
