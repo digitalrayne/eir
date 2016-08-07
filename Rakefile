@@ -377,6 +377,7 @@ task :build_toolchain => [
   :build_cross_binutils,
   :patch_cross_gccstatic,
   :build_cross_gccstatic,
+  :patch_cross_glibc,
   :build_cross32_glibc,
   :build_cross_glibc,
   :patch_cross_gcc,

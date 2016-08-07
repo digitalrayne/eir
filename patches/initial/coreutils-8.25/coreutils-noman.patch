@@ -1,34 +1,35 @@
-diff -Naur coreutils-8.25/Makefile.in coreutils-patched-8.25/Makefile.in
---- coreutils-8.25/Makefile.in	2016-07-05 11:09:47.089793423 +1000
-+++ coreutils-patched-8.25/Makefile.in	2016-07-05 11:27:59.812746402 +1000
-@@ -75,26 +75,6 @@
- # You should have received a copy of the GNU General Public License
- # along with this program.  If not, see <http://www.gnu.org/licenses/>.
- 
--# Make coreutils man pages.				-*-Makefile-*-
--# This is included by the top-level Makefile.am.
--
--# Copyright (C) 2002-2016 Free Software Foundation, Inc.
--
--# This program is free software: you can redistribute it and/or modify
--# it under the terms of the GNU General Public License as published by
--# the Free Software Foundation, either version 3 of the License, or
--# (at your option) any later version.
--
--# This program is distributed in the hope that it will be useful,
--# but WITHOUT ANY WARRANTY; without even the implied warranty of
--# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--# GNU General Public License for more details.
--
--# You should have received a copy of the GNU General Public License
--# along with this program.  If not, see <http://www.gnu.org/licenses/>.
--
--
--
- VPATH = @srcdir@
- am__is_gnu_make = { \
-   if test -z '$(MAKELEVEL)'; then \
-@@ -2546,7 +2526,7 @@
+diff -Naur coreutils-8.25/Makefile.am coreutils-8.25-patched/Makefile.am
+--- coreutils-8.25/Makefile.am	2016-01-02 00:48:50.000000000 +1100
++++ coreutils-8.25-patched/Makefile.am	2016-08-07 20:34:49.077930404 +1000
+@@ -226,5 +226,4 @@
+ include $(top_srcdir)/lib/local.mk
+ include $(top_srcdir)/src/local.mk
+ include $(top_srcdir)/doc/local.mk
+-include $(top_srcdir)/man/local.mk
+ include $(top_srcdir)/tests/local.mk
+diff -Naur coreutils-8.25/Makefile.in coreutils-8.25-patched/Makefile.in
+--- coreutils-8.25/Makefile.in	2016-01-20 21:55:18.000000000 +1100
++++ coreutils-8.25-patched/Makefile.in	2016-08-07 20:34:29.567928524 +1000
+@@ -1539,7 +1539,7 @@
+ 	src/uniq$(EXEEXT) src/unlink$(EXEEXT) src/vdir$(EXEEXT) \
+ 	src/wc$(EXEEXT) src/whoami$(EXEEXT) src/yes$(EXEEXT)
+ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkglibexecdir)" \
+-	"$(DESTDIR)$(infodir)" "$(DESTDIR)$(man1dir)"
++	"$(DESTDIR)$(infodir)"
+ PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS) $(pkglibexec_PROGRAMS)
+ am_src___OBJECTS = src/lbracket.$(OBJEXT)
+ src___OBJECTS = $(am_src___OBJECTS)
+@@ -2321,9 +2321,7 @@
+     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
+          $(am__cd) "$$dir" && rm -f $$files; }; \
+   }
+-man1dir = $(mandir)/man1
+ NROFF = nroff
+-MANS = $(man1_MANS)
+ HEADERS = $(noinst_HEADERS)
+ RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
+   distclean-recursive maintainer-clean-recursive
+@@ -2546,7 +2544,7 @@
  	$(top_srcdir)/build-aux/texinfo.tex \
  	$(top_srcdir)/build-aux/ylwrap $(top_srcdir)/doc/local.mk \
  	$(top_srcdir)/lib/alloca.c $(top_srcdir)/lib/config.hin \
@@ -37,7 +38,7 @@ diff -Naur coreutils-8.25/Makefile.in coreutils-patched-8.25/Makefile.in
  	$(top_srcdir)/src/local.mk $(top_srcdir)/src/single-binary.mk \
  	$(top_srcdir)/tests/local.mk ABOUT-NLS AUTHORS COPYING \
  	ChangeLog INSTALL NEWS README THANKS TODO build-aux/ar-lib \
-@@ -2647,7 +2627,6 @@
+@@ -2647,7 +2645,6 @@
  EOVERFLOW_VALUE = @EOVERFLOW_VALUE@
  ERRNO_H = @ERRNO_H@
  EXEEXT = @EXEEXT@
@@ -45,15 +46,32 @@ diff -Naur coreutils-8.25/Makefile.in coreutils-patched-8.25/Makefile.in
  FLOAT_H = @FLOAT_H@
  FNMATCH_H = @FNMATCH_H@
  GETADDRINFO_LIB = @GETADDRINFO_LIB@
-@@ -3871,7 +3850,6 @@
+@@ -3398,7 +3395,6 @@
+ HAVE_XLOCALE_H = @HAVE_XLOCALE_H@
+ HAVE__BOOL = @HAVE__BOOL@
+ HAVE__EXIT = @HAVE__EXIT@
+-HELP2MAN = @HELP2MAN@
+ HOSTENT_LIB = @HOSTENT_LIB@
+ ICONV_CONST = @ICONV_CONST@
+ ICONV_H = @ICONV_H@
+@@ -3463,7 +3459,6 @@
+ LTLIBPTH = @LTLIBPTH@
+ LTLIBTHREAD = @LTLIBTHREAD@
+ MAKEINFO = @MAKEINFO@
+-MAN = @MAN@
+ MKDIR_P = @MKDIR_P@
+ MSGFMT = @MSGFMT@
+ MSGFMT_015 = @MSGFMT_015@
+@@ -3871,8 +3866,6 @@
  lispdir = @lispdir@
  localedir = @localedir@
  localstatedir = @localstatedir@
 -man1_MANS = @man1_MANS@
- mandir = @mandir@
+-mandir = @mandir@
  mkdir_p = @mkdir_p@
  oldincludedir = @oldincludedir@
-@@ -4076,8 +4054,7 @@
+ pdfdir = @pdfdir@
+@@ -4076,8 +4069,7 @@
  	lib/xdectoint.h lib/xgetcwd.h lib/xnanosleep.h lib/xreadlink.h \
  	lib/xstrtod.h lib/xstrtol.h lib/xstrtod.c lib/xstrtod.h \
  	lib/xalloc.h lib/yesno.h src/dcgen src/dircolors.hin \
@@ -63,7 +81,16 @@ diff -Naur coreutils-8.25/Makefile.in coreutils-patched-8.25/Makefile.in
  	$(all_tests) init.cfg tests/Coreutils.pm tests/CuSkip.pm \
  	tests/CuTmpdir.pm tests/d_type-check tests/envvar-check \
  	tests/factor/run.sh tests/factor/create-test.sh \
-@@ -5025,18 +5002,6 @@
+@@ -4201,7 +4193,7 @@
+ 	lib/ref-add.sed lib/ref-del.sed $(SCRIPTS) \
+ 	$(no_install__progs) src/coreutils_symlinks \
+ 	src/coreutils_shebangs src/fs-def src/fs-magic \
+-	src/fs-kernel-magic $(ALL_MANS) $(factor_tests)
++	src/fs-kernel-magic $(factor_tests)
+ MOSTLYCLEANDIRS = lib/arpa lib/netinet lib/selinux lib/sys lib/sys \
+ 	lib/sys lib/sys lib/sys lib/sys lib/sys lib/sys
+ AM_CPPFLAGS = -Ilib -I$(top_srcdir)/lib -Isrc -I$(top_srcdir)/src
+@@ -5025,18 +5017,8 @@
       }				\
     END {$$m and (warn "$@: do not use upper case in \@var{...}\n"), exit 1}'
  
@@ -73,8 +100,8 @@ diff -Naur coreutils-8.25/Makefile.in coreutils-patched-8.25/Makefile.in
 -
 -# Dependencies common to all man pages.  Updated below.
 -
--# Depend on this to get version number changes.
--
+ # Depend on this to get version number changes.
+ 
 -# This is required so that changes to e.g., emit_bug_reporting_address
 -# provoke regeneration of all the manpages.
 -mandeps = .version $(top_srcdir)/src/system.h $(am__append_5)
@@ -82,12 +109,8 @@ diff -Naur coreutils-8.25/Makefile.in coreutils-patched-8.25/Makefile.in
  # Indirections required so that we'll still be able to know the
  # complete list of our tests even if the user overrides TESTS
  # from the command line (as permitted by the test harness API).
-@@ -5844,10 +5809,10 @@
- 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
- 
- .SUFFIXES:
--.SUFFIXES: .1 .c .dvi .log .o .obj .pl .pl$(EXEEXT) .ps .sed .sh .sh$(EXEEXT) .sin .trs .x .xpl .xpl$(EXEEXT) .y
-+.SUFFIXES: .c .dvi .log .o .obj .pl .pl$(EXEEXT) .ps .sed .sh .sh$(EXEEXT) .sin .trs .x .xpl .xpl$(EXEEXT) .y
+@@ -5847,7 +5829,7 @@
+ .SUFFIXES: .1 .c .dvi .log .o .obj .pl .pl$(EXEEXT) .ps .sed .sh .sh$(EXEEXT) .sin .trs .x .xpl .xpl$(EXEEXT) .y
  am--refresh: Makefile
  	@:
 -$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(top_srcdir)/lib/local.mk $(srcdir)/lib/gnulib.mk $(top_srcdir)/src/local.mk $(srcdir)/src/cu-progs.mk $(top_srcdir)/src/single-binary.mk $(top_srcdir)/doc/local.mk $(top_srcdir)/man/local.mk $(top_srcdir)/tests/local.mk $(am__configure_deps)
@@ -95,7 +118,7 @@ diff -Naur coreutils-8.25/Makefile.in coreutils-patched-8.25/Makefile.in
  	@for dep in $?; do \
  	  case '$(am__configure_deps)' in \
  	    *$$dep*) \
-@@ -5869,7 +5834,7 @@
+@@ -5869,7 +5851,7 @@
  	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)'; \
  	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe);; \
  	esac;
@@ -104,7 +127,127 @@ diff -Naur coreutils-8.25/Makefile.in coreutils-patched-8.25/Makefile.in
  
  $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
  	$(SHELL) ./config.status --recheck
-@@ -14269,148 +14234,6 @@
+@@ -11246,47 +11228,6 @@
+ 	  echo " rm -f $$i $$i-[0-9] $$i-[0-9][0-9] $$i_i[0-9] $$i_i[0-9][0-9]"; \
+ 	  rm -f $$i $$i-[0-9] $$i-[0-9][0-9] $$i_i[0-9] $$i_i[0-9][0-9]; \
+ 	done
+-install-man1: $(man1_MANS)
+-	@$(NORMAL_INSTALL)
+-	@list1='$(man1_MANS)'; \
+-	list2=''; \
+-	test -n "$(man1dir)" \
+-	  && test -n "`echo $$list1$$list2`" \
+-	  || exit 0; \
+-	echo " $(MKDIR_P) '$(DESTDIR)$(man1dir)'"; \
+-	$(MKDIR_P) "$(DESTDIR)$(man1dir)" || exit 1; \
+-	{ for i in $$list1; do echo "$$i"; done;  \
+-	if test -n "$$list2"; then \
+-	  for i in $$list2; do echo "$$i"; done \
+-	    | sed -n '/\.1[a-z]*$$/p'; \
+-	fi; \
+-	} | while read p; do \
+-	  if test -f $$p; then d=; else d="$(srcdir)/"; fi; \
+-	  echo "$$d$$p"; echo "$$p"; \
+-	done | \
+-	sed -e 'n;s,.*/,,;p;h;s,.*\.,,;s,^[^1][0-9a-z]*$$,1,;x' \
+-	      -e 's,\.[0-9a-z]*$$,,;$(transform);G;s,\n,.,' | \
+-	sed 'N;N;s,\n, ,g' | { \
+-	list=; while read file base inst; do \
+-	  if test "$$base" = "$$inst"; then list="$$list $$file"; else \
+-	    echo " $(INSTALL_DATA) '$$file' '$(DESTDIR)$(man1dir)/$$inst'"; \
+-	    $(INSTALL_DATA) "$$file" "$(DESTDIR)$(man1dir)/$$inst" || exit $$?; \
+-	  fi; \
+-	done; \
+-	for i in $$list; do echo "$$i"; done | $(am__base_list) | \
+-	while read files; do \
+-	  test -z "$$files" || { \
+-	    echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(man1dir)'"; \
+-	    $(INSTALL_DATA) $$files "$(DESTDIR)$(man1dir)" || exit $$?; }; \
+-	done; }
+-
+-uninstall-man1:
+-	@$(NORMAL_UNINSTALL)
+-	@list='$(man1_MANS)'; test -n "$(man1dir)" || exit 0; \
+-	files=`{ for i in $$list; do echo "$$i"; done; \
+-	} | sed -e 's,.*/,,;h;s,.*\.,,;s,^[^1][0-9a-z]*$$,1,;x' \
+-	      -e 's,\.[0-9a-z]*$$,,;$(transform);G;s,\n,.,'`; \
+-	dir='$(DESTDIR)$(man1dir)'; $(am__uninstall_files_from_dir)
+ 
+ # This directory's subdirectories are mostly independent; you can cd
+ # into them and run 'make' without going through this Makefile.
+@@ -11773,11 +11714,11 @@
+ 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS check-local
+ check: $(BUILT_SOURCES)
+ 	$(MAKE) $(AM_MAKEFLAGS) check-recursive
+-all-am: Makefile $(INFO_DEPS) $(LIBRARIES) $(PROGRAMS) $(MANS) \
++all-am: Makefile $(INFO_DEPS) $(LIBRARIES) $(PROGRAMS) \
+ 		$(HEADERS) all-local
+ installdirs: installdirs-recursive
+ installdirs-am:
+-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkglibexecdir)" "$(DESTDIR)$(infodir)" "$(DESTDIR)$(man1dir)"; do \
++	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkglibexecdir)" "$(DESTDIR)$(infodir)"; do \
+ 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
+ 	done
+ install: $(BUILT_SOURCES)
+@@ -11857,7 +11798,7 @@
+ 
+ info-am: $(INFO_DEPS)
+ 
+-install-data-am: install-info-am install-man
++install-data-am: install-info-am
+ 
+ install-dvi: install-dvi-recursive
+ 
+@@ -11942,8 +11883,6 @@
+ 	    install-info --info-dir="$(DESTDIR)$(infodir)" "$(DESTDIR)$(infodir)/$$relfile" || :;\
+ 	  done; \
+ 	else : ; fi
+-install-man: install-man1
+-
+ install-pdf: install-pdf-recursive
+ 
+ install-pdf-am: $(PDFS)
+@@ -12000,11 +11939,9 @@
+ ps-am: $(PSS)
+ 
+ uninstall-am: uninstall-binPROGRAMS uninstall-dvi-am uninstall-html-am \
+-	uninstall-info-am uninstall-local uninstall-man \
++	uninstall-info-am uninstall-local \
+ 	uninstall-pdf-am uninstall-pkglibexecPROGRAMS uninstall-ps-am
+ 
+-uninstall-man: uninstall-man1
+-
+ .MAKE: $(am__recursive_targets) all check check-am install install-am \
+ 	install-exec-am install-strip
+ 
+@@ -12022,7 +11959,7 @@
+ 	install-data-am install-dvi install-dvi-am install-exec \
+ 	install-exec-am install-exec-hook install-exec-local \
+ 	install-html install-html-am install-info install-info-am \
+-	install-man install-man1 install-pdf install-pdf-am \
++	install-pdf install-pdf-am \
+ 	install-pkglibexecPROGRAMS install-ps install-ps-am \
+ 	install-strip installcheck installcheck-am installdirs \
+ 	installdirs-am maintainer-clean maintainer-clean-aminfo \
+@@ -12031,7 +11968,7 @@
+ 	mostlyclean-local mostlyclean-vti pdf pdf-am ps ps-am recheck \
+ 	tags tags-am uninstall uninstall-am uninstall-binPROGRAMS \
+ 	uninstall-dvi-am uninstall-html-am uninstall-info-am \
+-	uninstall-local uninstall-man uninstall-man1 uninstall-pdf-am \
++	uninstall-local uninstall-pdf-am \
+ 	uninstall-pkglibexecPROGRAMS uninstall-ps-am
+ 
+ .PRECIOUS: Makefile
+@@ -12230,8 +12167,6 @@
+ 	  echo '#define LIBDIR "$(libdir)"'; \
+ 	  echo '#define LISPDIR "$(lispdir)"'; \
+ 	  echo '#define LOCALEDIR "$(localedir)"'; \
+-	  echo '#define MANDIR "$(mandir)"'; \
+-	  echo '#define MANEXT "$(manext)"'; \
+ 	  echo '#define PKGDATADIR "$(pkgdatadir)"'; \
+ 	  echo '#define PKGINCLUDEDIR "$(pkgincludedir)"'; \
+ 	  echo '#define PKGLIBDIR "$(pkglibdir)"'; \
+@@ -14269,148 +14204,6 @@
  
  check-local: check-texinfo
  

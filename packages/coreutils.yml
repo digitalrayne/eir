@@ -8,5 +8,5 @@ build:
     echo fu_cv_sys_stat_starfs2_bsize=yes > config.cache && 
     echo gl_cv_func_working_mkstemp=yes >> config.cache && 
     $EIR_COREUTILS_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --enable-install-program=hostname --cache-file=config.cache && 
-    make && 
+    make -j1 && 
     make install
