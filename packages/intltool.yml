@@ -1,0 +1,10 @@
+file: "intltool-0.51.0.tar.gz"
+uri: "https://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz"
+hash: "67c74d94196b153b774ab9f89b2fa6c6ba79352407037c8c14d5aeb334e959cd"
+name: "intltool"
+version: "0.51.0"
+build:
+  :initial: >
+    $EIR_INTLTOOL_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET --libdir=$EIR_TOOLCHAIN_PREFIX/lib && 
+    make -j$EIR_CORES && 
+    make install

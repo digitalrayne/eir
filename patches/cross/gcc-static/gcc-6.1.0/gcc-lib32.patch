@@ -1,0 +1,99 @@
+diff -Naur gcc-6.1.0/gcc/config/i386/t-linux64 gcc-6.1.0-patched/gcc/config/i386/t-linux64
+--- gcc-6.1.0/gcc/config/i386/t-linux64	2016-01-05 01:30:50.000000000 +1100
++++ gcc-6.1.0-patched/gcc/config/i386/t-linux64	2016-08-07 13:05:06.007331365 +1000
+@@ -30,9 +30,25 @@
+ # 	/lib64 has x86-64 libraries.
+ # 	/libx32 has x32 libraries.
+ #
++
++
+++MULTILIB_OSDIRNAMES = m64=../lib$(call if_multiarch,:x86_64-linux-gnu)
+++MULTILIB_OSDIRNAMES+= m32=../lib32$(call if_multiarch,:i386-linux-gnu)
++
++
+ comma=,
+ MULTILIB_OPTIONS    = $(subst $(comma),/,$(TM_MULTILIB_CONFIG))
+ MULTILIB_DIRNAMES   = $(patsubst m%, %, $(subst /, ,$(MULTILIB_OPTIONS)))
++ifneq (,$(findstring gnux32,$(target)))
+ MULTILIB_OSDIRNAMES = m64=../lib64$(call if_multiarch,:x86_64-linux-gnu)
+-MULTILIB_OSDIRNAMES+= m32=$(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)$(call if_multiarch,:i386-linux-gnu)
++MULTILIB_OSDIRNAMES+= m32=../lib32$(call if_multiarch,:i386-linux-gnu)
++MULTILIB_OSDIRNAMES+= mx32=../lib$(call if_multiarch,:x86_64-linux-gnux32)
++else ifneq (,$(findstring x86_64,$(target)))
++MULTILIB_OSDIRNAMES = m64=../lib$(call if_multiarch,:x86_64-linux-gnu)
++MULTILIB_OSDIRNAMES+= m32=../lib32$(call if_multiarch,:i386-linux-gnu)
+ MULTILIB_OSDIRNAMES+= mx32=../libx32$(call if_multiarch,:x86_64-linux-gnux32)
++else
++MULTILIB_OSDIRNAMES = m64=../lib$(call if_multiarch,:x86_64-linux-gnu)
++MULTILIB_OSDIRNAMES+= m32=../lib32$(call if_multiarch,:i386-linux-gnu)
++MULTILIB_OSDIRNAMES+= mx32=../libx32$(call if_multiarch,:x86_64-linux-gnux32)
++endif
+diff -Naur gcc-6.1.0/gcc/config/mips/t-linux64 gcc-6.1.0-patched/gcc/config/mips/t-linux64
+--- gcc-6.1.0/gcc/config/mips/t-linux64	2016-01-05 01:30:50.000000000 +1100
++++ gcc-6.1.0-patched/gcc/config/mips/t-linux64	2016-08-07 13:05:06.008331365 +1000
+@@ -20,7 +20,20 @@
+ MULTILIB_DIRNAMES = n32 32 64
+ MIPS_EL = $(if $(filter %el, $(firstword $(subst -, ,$(target)))),el)
+ MIPS_SOFT = $(if $(strip $(filter MASK_SOFT_FLOAT_ABI, $(target_cpu_default)) $(filter soft, $(with_float))),soft)
++
++ifneq (,$(findstring gnuabi64,$(target)))
++MULTILIB_OSDIRNAMES = \
++	../lib32$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabin32$(MIPS_SOFT)) \
++	../libo32$(call if_multiarch,:mips$(MIPS_EL)-linux-gnu$(MIPS_SOFT)) \
++	../lib$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabi64$(MIPS_SOFT))
++else ifneq (,$(findstring gnuabin32,$(target)))
++MULTILIB_OSDIRNAMES = \
++	../lib$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabin32$(MIPS_SOFT)) \
++	../libo32$(call if_multiarch,:mips$(MIPS_EL)-linux-gnu$(MIPS_SOFT)) \
++	../lib64$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabi64$(MIPS_SOFT))
++else
+ MULTILIB_OSDIRNAMES = \
+ 	../lib32$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabin32$(MIPS_SOFT)) \
+ 	../lib$(call if_multiarch,:mips$(MIPS_EL)-linux-gnu$(MIPS_SOFT)) \
+ 	../lib64$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabi64$(MIPS_SOFT))
++endif
+diff -Naur gcc-6.1.0/gcc/config/sparc/linux64.h gcc-6.1.0-patched/gcc/config/sparc/linux64.h
+--- gcc-6.1.0/gcc/config/sparc/linux64.h	2016-01-05 01:30:50.000000000 +1100
++++ gcc-6.1.0-patched/gcc/config/sparc/linux64.h	2016-08-07 13:06:08.703337404 +1000
+@@ -84,8 +84,8 @@
+    When the -shared link option is used a final link is not being
+    done.  */
+ 
+-#define GLIBC_DYNAMIC_LINKER32 "/lib/ld-linux.so.2"
+-#define GLIBC_DYNAMIC_LINKER64 "/lib64/ld-linux.so.2"
++#define GLIBC_DYNAMIC_LINKER32 "/lib32/ld-linux.so.2"
++#define GLIBC_DYNAMIC_LINKER64 "/lib/ld-linux.so.2"
+ 
+ #ifdef SPARC_BI_ARCH
+ 
+@@ -193,7 +193,7 @@
+ #else /* !SPARC_BI_ARCH */
+ 
+ #undef LINK_SPEC
+-#define LINK_SPEC "-m elf64_sparc -Y P,%R/usr/lib64 %{shared:-shared} \
++#define LINK_SPEC "-m elf64_sparc -Y P,%R/usr/lib %{shared:-shared} \
+   %{!shared: \
+     %{!static: \
+       %{rdynamic:-export-dynamic} \
+diff -Naur gcc-6.1.0/gcc/config.gcc gcc-6.1.0-patched/gcc/config.gcc
+--- gcc-6.1.0/gcc/config.gcc	2016-04-11 20:14:59.000000000 +1000
++++ gcc-6.1.0-patched/gcc/config.gcc	2016-08-07 13:07:36.486345859 +1000
+@@ -4204,14 +4204,14 @@
+ 			 echo "#undef  LINK_OS_EXTRA_SPEC32"
+ 			 echo "#define LINK_OS_EXTRA_SPEC32" \
+ 			      "\"%(link_os_new_dtags)" \
+-			      "-rpath $prefix/lib -rpath $at/lib" \
+-			      "-L $prefix/lib -L $at/lib\""
++			      "-rpath $prefix/lib32 -rpath $at/lib32" \
++			      "-L $prefix/lib32 -L $at/lib32\""
+ 			 echo
+ 			 echo "#undef  LINK_OS_EXTRA_SPEC64"
+ 			 echo "#define LINK_OS_EXTRA_SPEC64" \
+ 			      "\"%(link_os_new_dtags)" \
+-			      "-rpath $prefix/lib64 -rpath $at/lib64" \
+-			      "-L $prefix/lib64 -L $at/lib64\""
++			      "-rpath $prefix/lib -rpath $at/lib" \
++			      "-L $prefix/lib -L $at/lib\""
+ 			 echo
+ 			 echo "#undef  LINK_OS_NEW_DTAGS_SPEC"
+ 			 echo "#define LINK_OS_NEW_DTAGS_SPEC" \
