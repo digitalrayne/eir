@@ -374,20 +374,16 @@ end
 
 task :build_toolchain => [
   :build_cross_file,
-  :build_cross_linux,
   :build_cross_m4,
   :build_cross_ncurses,
-  :build_cross_pkgconfiglite,
   :build_cross_gmp,
   :build_cross_mpfr,
   :build_cross_mpc,
   :build_cross_isl,
+  :patch_cross_binutils,
   :build_cross_binutils,
   :patch_cross_gccstatic,
   :build_cross_gccstatic,
-  #:patch_cross_glibc,
-  #:build_cross32_glibc,
-  #:build_cross_glibc,
   :build_cross32_musl,
   :build_cross_musl,
   :patch_cross_gcc,
@@ -397,7 +393,6 @@ task :build_toolchain => [
   :build_initial_mpc,
   :build_initial_isl,
   :build_initial_zlib,
-  :patch_initial_binutils,
   :build_initial_binutils,
   :build_initial_gcc,
   :patch_initial_ncurses,
@@ -453,13 +448,13 @@ task :env do
   ENV['EIR_CORES'] = ( Facter.value('processors')['count'] * 2 ).to_s
   puts "Set $EIR_CORES environment variable to #{ ENV['EIR_CORES'] }".blue
 
-  ENV['EIR_TARGET'] = "x86_64-unknown-linux-gnu"
+  ENV['EIR_TARGET'] = 'x86_64-pc-linux-musl'
   puts "Set $EIR_TARGET environment variable to #{ ENV['EIR_TARGET'] }".blue
 
-  ENV['EIR_TARGET32'] = "i686-pc-linux-gnu"
+  ENV['EIR_TARGET32'] = 'i686-pc-linux-musl'
   puts "Set $EIR_TARGET32 environment variable to #{ ENV['EIR_TARGET32'] }".blue
   
-  ENV['EIR_HOST'] = "x86_64-cross-gnu"
+  ENV['EIR_HOST'] = 'x86_64-cross-gnu'
   puts "Set $EIR_HOST environment variable to #{ ENV['EIR_HOST'] }".blue
 
   ENV['LC_ALL'] = 'POSIX'
