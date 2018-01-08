@@ -1,17 +1,17 @@
 Eir
-###
+---
 
 Heavily WIP GNU/Linux source-distro bootstrap.
 
 Building
-########
+--------
 
 Run `rake`
 
 Sources will be downloaded an compiled for each stage.
 
 Prereqs
-#######
+-------
 
 - a working toolchain
 - ruby & gem
