@@ -7,4 +7,4 @@ build:
   :initial: >
     $EIR_GAWK_SOURCE/configure --prefix=$EIR_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_TARGET && 
     make -j$EIR_CORES && 
-    make install
+    make install-am

@@ -5,10 +5,11 @@ name: "musl"
 version: "1.1.15"
 build:
   :cross32: >
-    BUILD_CC=gcc CC="$EIR_TARGET-gcc -m32" CXX="$EIR_TARGET-g++ -m32" CROSS_COMPILE=$EIR_TARGET- AR=$EIR_TARGET-ar RANLIB=$EIR_TARGET-ranlib $EIR_MUSL_SOURCE/configure --prefix=/ --host=$EIR_TARGET32 --build=$EIR_HOST --includedir=$EIR_TOOLCHAIN_PREFIX/include --libdir=/lib32 $EIR_TARGET32 && 
+    BUILD_CC=gcc CC="$EIR_TARGET-gcc -m32" CXX="$EIR_TARGET-g++ -m32" CROSS_COMPILE=$EIR_TARGET- AR=$EIR_TARGET-ar RANLIB=$EIR_TARGET-ranlib $EIR_MUSL_SOURCE/configure --prefix=/ --target=$EIR_TARGET32 --host=$EIR_TARGET32 --build=$EIR_HOST --includedir=/include/$EIR_TARGET32 --libdir=/lib32 $EIR_TARGET32 && 
     make && 
     make DESTDIR=$EIR_TOOLCHAIN_PREFIX install
   :cross: >
-    BUILD_CC=gcc CC="$EIR_TARGET-gcc -m64" CXX="$EIR_TARGET-g++ -m64" CROSS_COMPILE=$EIR_TARGET- AR=$EIR_TARGET-ar RANLIB=$EIR_TARGET-ranlib $EIR_MUSL_SOURCE/configure --prefix=/ --host=$EIR_TARGET --build=$EIR_HOST --enable-multi-arch --libdir=/lib --includedir=$EIR_TOOLCHAIN_PREFIX/include && 
+    rm $EIR_TOOLCHAIN_PREFIX/include/limits.h &&
+    BUILD_CC=gcc CC="$EIR_TARGET-gcc -m64" CXX="$EIR_TARGET-g++ -m64" CROSS_COMPILE=$EIR_TARGET- AR=$EIR_TARGET-ar RANLIB=$EIR_TARGET-ranlib $EIR_MUSL_SOURCE/configure --prefix=/ --host=$EIR_TARGET --build=$EIR_HOST --enable-multi-arch --libdir=/lib --includedir=/include && 
     make && 
     make DESTDIR=$EIR_TOOLCHAIN_PREFIX install

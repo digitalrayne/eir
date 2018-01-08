@@ -267,8 +267,8 @@ puts "Processing package metadata and building tasks for packages".green
           ENV['AS'] = "#{ ENV['EIR_TARGET'] }-as"
           ENV['LD'] = "#{ ENV['EIR_TARGET'] }-ld"
           ENV['NM'] = "#{ ENV['EIR_TARGET'] }-nm"
-          ENV['CC'] = "#{ ENV['EIR_TARGET'] }-gcc -m64"
-          ENV['CXX'] = "#{ ENV['EIR_TARGET'] }-g++ -m64"
+          ENV['CC'] = "#{ ENV['EIR_TARGET'] }-gcc"
+          ENV['CXX'] = "#{ ENV['EIR_TARGET'] }-g++"
           ENV['RANLIB'] = "#{ ENV['EIR_TARGET'] }-ranlib"
           ENV['STRIP'] = "#{ ENV['EIR_TARGET'] }-strip"
           ENV['OBJCOPY'] = "#{ ENV['EIR_TARGET'] }-objcopy"
@@ -374,6 +374,7 @@ end
 
 task :build_toolchain => [
   :build_cross_file,
+  :build_cross_linux,
   :build_cross_m4,
   :build_cross_ncurses,
   :build_cross_gmp,
@@ -384,16 +385,16 @@ task :build_toolchain => [
   :build_cross_binutils,
   :patch_cross_gccstatic,
   :build_cross_gccstatic,
-  :build_cross32_musl,
-  :build_cross_musl,
+  :build_cross_glibc,
+  :build_cross32_glibc,
   :patch_cross_gcc,
   :build_cross_gcc,
+  :build_initial_binutils,
   :build_initial_gmp,
   :build_initial_mpfr,
   :build_initial_mpc,
   :build_initial_isl,
   :build_initial_zlib,
-  :build_initial_binutils,
   :build_initial_gcc,
   :patch_initial_ncurses,
   :build_initial_ncurses,
@@ -442,16 +443,16 @@ task :env do
   ENV['EIR_CROSS_TOOLCHAIN_PREFIX'] = "#{ ENV['EIR_PREFIX'] }/cross-toolchain"
   puts "Set $EIR_CROSS_TOOLCHAIN_PREFIX environment variable to #{ ENV['EIR_CROSS_TOOLCHAIN_PREFIX'] }".blue
  
-  ENV['EIR_PATH'] = "#{ ENV['EIR_CROSS_TOOLCHAIN_PREFIX'] }/bin:/bin:/usr/bin"
+  ENV['EIR_PATH'] = "#{ ENV['EIR_TOOLCHAIN_PREFIX'] }/bin:#{ ENV['EIR_CROSS_TOOLCHAIN_PREFIX'] }/bin:/bin:/usr/bin"
   puts "Set $EIR_PATH environment variable to #{ ENV['EIR_PATH'] }".blue
  
   ENV['EIR_CORES'] = ( Facter.value('processors')['count'] * 2 ).to_s
   puts "Set $EIR_CORES environment variable to #{ ENV['EIR_CORES'] }".blue
 
-  ENV['EIR_TARGET'] = 'x86_64-pc-linux-musl'
+  ENV['EIR_TARGET'] = 'x86_64-pc-linux-gnu'
   puts "Set $EIR_TARGET environment variable to #{ ENV['EIR_TARGET'] }".blue
 
-  ENV['EIR_TARGET32'] = 'i686-pc-linux-musl'
+  ENV['EIR_TARGET32'] = 'i686-pc-linux-gnu'
   puts "Set $EIR_TARGET32 environment variable to #{ ENV['EIR_TARGET32'] }".blue
   
   ENV['EIR_HOST'] = 'x86_64-cross-gnu'

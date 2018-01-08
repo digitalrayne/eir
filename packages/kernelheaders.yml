@@ -1,0 +1,10 @@
+file: "kernel-headers-3.12.6-5.tar.gz"
+uri: "https://github.com/sabotage-linux/kernel-headers/archive/v3.12.6-5.tar.gz"
+hash: "ecf4db8781dc50a21cbc4cb17b039f96aede53f9da13435a3201373abb49b96b"
+name: "kernelheaders"
+version: "3.12.6-5"
+build:
+  :cross: >
+    mkdir -p $EIR_TOOLCHAIN_PREFIX/include && 
+    cd $EIR_KERNELHEADERS_SOURCE && 
+    CC=false make V=1 ARCH=x86 prefix=/ INSTALL_HDR_PATH=$EIR_TOOLCHAIN_PREFIX headers_install

@@ -1,12 +1,14 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    CFPropertyList (2.2.8)
     bzip2-ffi (1.0.0)
       ffi (~> 1.0)
     colorize (0.7.7)
+    facter (2.4.6)
+      CFPropertyList (~> 2.2.6)
     ffi (1.9.10)
     io-like (0.3.0)
-    minitar (0.5.4)
     progressbar (0.21.0)
     rake (11.2.2)
     ruby-xz (0.2.3)
@@ -19,7 +21,7 @@ PLATFORMS
 DEPENDENCIES
   bzip2-ffi
   colorize
-  minitar
+  facter
   progressbar
   rake
   ruby-xz (= 0.2.3)

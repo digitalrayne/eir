@@ -6,6 +6,7 @@ version: "4.6.2"
 build:
   :cross: >
     cd $EIR_LINUX_SOURCE && 
-    make mrproper && 
+    make mrproper &&
+    make defconfig && 
     make ARCH=x86_64 headers_check && 
     make ARCH=x86_64 INSTALL_HDR_PATH=$EIR_TOOLCHAIN_PREFIX headers_install 

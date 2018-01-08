@@ -5,10 +5,10 @@ name: "binutils"
 version: "2.26"
 build:
   :cross: > 
-    AR=ar AS=as $EIR_BINUTILS_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_HOST --target=$EIR_TARGET --with-sysroot=$EIR_CROSS_TOOLCHAIN_PREFIX --with-lib-path=/lib:/lib32 --disable-nls --disable-static --enable-64bit-bfd --enable-gold=yes --enable-plugins --enable-threads --disable-werror && 
+    AR=ar AS=as $EIR_BINUTILS_SOURCE/configure --prefix=$EIR_CROSS_TOOLCHAIN_PREFIX --build=$EIR_HOST --host=$EIR_HOST --target=$EIR_TARGET --with-sysroot=$EIR_PREFIX --with-lib-path=/toolchain/lib:/toolchain/lib32 --disable-nls --disable-static --enable-64bit-bfd --enable-gold=yes --enable-plugins --enable-threads --disable-werror && 
     make && 
     make install
   :initial: >
-    $EIR_BINUTILS_SOURCE/configure --with-sysroot=$EIR_TOOLCHAIN_PREFIX --prefix=$EIR_TOOLCHAIN_PREFIX --libdir=$EIR_TOOLCHAIN_PREFIX/lib --with-lib-path=/lib:/lib32 --build=$EIR_HOST --host=$EIR_TARGET --target=$EIR_TARGET --disable-nls --enable-shared --enable-64bit-bfd --enable-gold=yes --enable-plugins --enable-threads && 
+    LD_FOR_TARGET=$EIR_TARGET-ld $EIR_BINUTILS_SOURCE/configure --with-sysroot --prefix=$EIR_TOOLCHAIN_PREFIX --libdir=$EIR_TOOLCHAIN_PREFIX/lib --with-lib-path=/lib:/lib32 --build=$EIR_HOST --host=$EIR_TARGET --target=$EIR_TARGET --disable-nls --enable-shared --enable-64bit-bfd --enable-gold=yes --enable-plugins --enable-threads && 
     make -j$EIR_CORES && 
     make install

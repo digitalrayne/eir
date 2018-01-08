@@ -1,0 +1,51 @@
+diff -Naur gcc-6.1.0/gcc/ginclude/stddef.h gcc-6.1.0-patched/gcc/ginclude/stddef.h
+--- gcc-6.1.0/gcc/ginclude/stddef.h	2016-01-05 01:30:50.000000000 +1100
++++ gcc-6.1.0-patched/gcc/ginclude/stddef.h	2016-08-11 12:08:23.977366772 +1000
+@@ -167,6 +167,7 @@
+ /* Define this type if we are doing the whole job,
+    or if we want this type in particular.  */
+ #if defined (_STDDEF_H) || defined (__need_size_t)
++#ifndef __DEFINED_size_t /* musl */
+ #ifndef __size_t__	/* BeOS */
+ #ifndef __SIZE_T__	/* Cray Unicos/Mk */
+ #ifndef _SIZE_T	/* in case <sys/types.h> has defined it. */
+@@ -184,6 +185,7 @@
+ #ifndef _GCC_SIZE_T
+ #ifndef _SIZET_
+ #ifndef __size_t
++#define __DEFINED_size_t /* musl */
+ #define __size_t__	/* BeOS */
+ #define __SIZE_T__	/* Cray Unicos/Mk */
+ #define _SIZE_T
+@@ -218,6 +220,7 @@
+ typedef long ssize_t;
+ #endif /* __BEOS__ */
+ #endif /* !(defined (__GNUG__) && defined (size_t)) */
++#endif /* __DEFINED_size_t */
+ #endif /* __size_t */
+ #endif /* _SIZET_ */
+ #endif /* _GCC_SIZE_T */
+@@ -247,6 +250,7 @@
+ /* Define this type if we are doing the whole job,
+    or if we want this type in particular.  */
+ #if defined (_STDDEF_H) || defined (__need_wchar_t)
++#ifndef __DEFINED_wchar_t /* musl */
+ #ifndef __wchar_t__	/* BeOS */
+ #ifndef __WCHAR_T__	/* Cray Unicos/Mk */
+ #ifndef _WCHAR_T
+@@ -264,6 +268,7 @@
+ #ifndef ___int_wchar_t_h
+ #ifndef __INT_WCHAR_T_H
+ #ifndef _GCC_WCHAR_T
++#define __DEFINED_wchar_t /* musl */
+ #define __wchar_t__	/* BeOS */
+ #define __WCHAR_T__	/* Cray Unicos/Mk */
+ #define _WCHAR_T
+@@ -344,6 +349,7 @@
+ #endif
+ #endif /* __WCHAR_T__ */
+ #endif /* __wchar_t__ */
++#endif
+ #undef	__need_wchar_t
+ #endif /* _STDDEF_H or __need_wchar_t.  */
+ 
